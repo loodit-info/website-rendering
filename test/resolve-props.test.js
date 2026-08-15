@@ -135,6 +135,11 @@ test("resolves all configured typography properties through one contract", () =>
   assert.equal(result.marginLeft, "auto");
 });
 
+test("keeps typography inline when its configured parent is a row", () => {
+  const result = createTypographyStyles({ widthMode: "fill", fontSize: 16 }, { parentDirection: "row" });
+  assert.equal(result.width, "auto");
+});
+
 test("resolves image sizing, placement and overlays through one contract", () => {
   const result = createImageStyles({ widthMode: "fixed", width: 640, maxWidth: 720, heightMode: "fixed", height: 360, aspectRatio: "16 / 9", fit: "contain", position: "right top", opacity: 80, radius: 18, overlayEnabled: true, overlayType: "gradient", overlayColor: "#111111", overlayGradientEnd: "#222222", overlayAngle: 90 });
   assert.equal(result.frame.width, 640);

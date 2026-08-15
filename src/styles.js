@@ -117,7 +117,7 @@ export function createTypographyStyles(props = {}, options = {}) {
     whiteSpace,
     overflowWrap: value(props.overflowWrap, wrapMode === "nowrap" ? "normal" : "break-word"),
     wordBreak: value(props.wordBreak, "normal"),
-    width: props.widthMode === "fixed" ? props.width : props.widthMode === "auto" ? "auto" : "100%",
+    width: props.widthMode === "fixed" ? props.width : props.widthMode === "auto" || options.parentDirection === "row" ? "auto" : "100%",
     maxWidth: value(props.maxWidth, options.defaultMaxWidth),
     alignSelf: align(alignment),
     marginLeft: alignment === "center" || alignment === "right" ? "auto" : 0,
