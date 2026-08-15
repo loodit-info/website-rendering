@@ -1,0 +1,22 @@
+{
+  "name": "@loodit/website-rendering",
+  "version": "0.1.0",
+  "description": "Framework-neutral schema and property resolution for Loodit website renderers.",
+  "type": "module",
+  "private": true,
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "import": "./src/index.js"
+    }
+  },
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
