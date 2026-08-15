@@ -303,6 +303,119 @@ export function createIconButtonStyles(props = {}) {
   };
 }
 
+export function createCardStyles(props = {}) {
+  const baseShadow = props.shadow === "small" ? "0 4px 14px #17221d14" : props.shadow === "large" ? "0 22px 55px #17221d26" : props.shadow === "none" ? "none" : "0 12px 32px #17221d1c";
+  return {
+    hoverLift: Boolean(props.hoverLift),
+    container: {
+      ...createSurfaceStyles(props),
+      "--loodit-card-hover-transform": `translateY(-${value(props.hoverLiftDistance, 4)}px)`,
+      "--loodit-card-hover-shadow": value(props.hoverShadow, "0 20px 48px #17221d24"),
+      width: "100%",
+      maxWidth: value(props.maxWidth, 460),
+      margin: "0 auto",
+      overflow: value(props.overflow, "hidden"),
+      boxShadow: baseShadow,
+      transition: `transform ${value(props.transitionDuration, 200)}ms ease, box-shadow ${value(props.transitionDuration, 200)}ms ease`,
+    },
+    content: { display: "flex", flexDirection: "column", gap: value(props.gap, 22) },
+  };
+}
+
+export function createMediaItemStyles(props = {}) {
+  return {
+    hoverLift: Boolean(props.hoverOverlay),
+    container: {
+      ...createSurfaceStyles(props),
+      "--loodit-media-hover-transform": `translateY(-${value(props.hoverLiftDistance, 3)}px)`,
+      "--loodit-media-hover-shadow": value(props.hoverShadow, "0 18px 40px #17221d1c"),
+      position: "relative",
+      width: "100%",
+      height: "100%",
+      overflow: value(props.overflow, "hidden"),
+      transition: `transform ${value(props.transitionDuration, 250)}ms ease, box-shadow ${value(props.transitionDuration, 250)}ms ease`,
+    },
+  };
+}
+
+export function createFilterStyles(props = {}, options = {}) {
+  const mobile = options.breakpoint === "mobile";
+  const filterShadow = props.shadow === "small" ? "0 5px 18px #17221d12" : props.shadow === "large" ? "0 24px 60px #17221d24" : props.shadow === "none" ? "none" : "0 14px 38px #17221d18";
+  return {
+    template: value(props.template, "compact"),
+    container: {
+      ...createSurfaceStyles({ ...props, padding: mobile ? value(props.mobilePadding, 16) : props.padding, radius: mobile ? value(props.mobileRadius, 18) : props.radius }),
+      "--loodit-filter-mobile-padding": `${value(props.mobilePadding, 16)}px`,
+      "--loodit-filter-mobile-radius": `${value(props.mobileRadius, 18)}px`,
+      boxSizing: "border-box",
+      width: `calc(100% - ${mobile ? 24 : 32}px)`,
+      maxWidth: props.maxWidth,
+      margin: "18px auto",
+      boxShadow: filterShadow,
+    },
+    content: { display: "flex", flexDirection: "column", gap: value(props.gap, 18), width: "100%" },
+  };
+}
+
+export function createFilterFieldStyles(props = {}) {
+  const control = {
+    "--loodit-filter-focus-border": value(props.focusBorderColor, "#6e9b82"),
+    "--loodit-filter-focus-ring": value(props.focusRing, "0 0 0 3px #286b4c14"),
+    boxSizing: "border-box",
+    display: "flex",
+    alignItems: "center",
+    gap: value(props.iconGap, 10),
+    width: "100%",
+    minHeight: value(props.height, 54),
+    paddingInline: value(props.paddingX, 16),
+    background: props.background,
+    color: props.color,
+    borderWidth: value(props.borderWidth, 1),
+    borderStyle: value(props.borderStyle, "solid"),
+    borderColor: value(props.borderColor, "transparent"),
+    borderRadius: value(props.radius, 14),
+    transition: "border-color .15s ease, box-shadow .15s ease",
+  };
+  return {
+    container: { position: "relative", display: "flex", flexDirection: "column", alignItems: "stretch", gap: 7, width: "100%", minWidth: 0 },
+    label: { color: value(props.labelColor, "#17221d"), fontSize: value(props.labelFontSize, 12), fontWeight: value(props.labelFontWeight, 650) },
+    control,
+    input: { minWidth: 0, width: "100%", height: "100%", border: 0, outline: 0, background: "transparent", color: "inherit", fontFamily: "inherit", fontSize: value(props.fontSize, 13) },
+    trigger: { ...control, textAlign: "left", fontFamily: "inherit", cursor: "pointer" },
+    value: { minWidth: 0, flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontSize: value(props.fontSize, 13) },
+    placeholder: { color: value(props.placeholderColor, "#89958e") },
+    menu: { position: "absolute", zIndex: 100, left: 0, right: 0, top: "calc(100% + 8px)", maxHeight: value(props.menuMaxHeight, 260), overflow: "auto", padding: value(props.menuPadding, 7), background: value(props.menuBackground, "#ffffff"), border: `${value(props.menuBorderWidth, 1)}px solid ${value(props.menuBorderColor, "#dfe5e1")}`, borderRadius: value(props.menuRadius, 14), boxShadow: value(props.menuShadow, "0 18px 48px #17221d2b") },
+    option: { boxSizing: "border-box", width: "100%", minHeight: value(props.optionHeight, 42), border: 0, borderRadius: value(props.optionRadius, 9), color: value(props.optionColor, "#344139"), padding: `${value(props.optionPaddingY, 10)}px ${value(props.optionPaddingX, 11)}px`, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, textAlign: "left", fontFamily: "inherit", fontSize: value(props.optionFontSize, 13), cursor: "pointer" },
+    selectedOption: { background: value(props.selectedOptionBackground, "#e7f1eb"), color: value(props.selectedOptionColor, "#205b40"), fontWeight: value(props.selectedOptionFontWeight, 700) },
+  };
+}
+
+export function createFilterChipStyles(props = {}, options = {}) {
+  const selected = options.selected === undefined ? Boolean(props.selected) : Boolean(options.selected);
+  return {
+    selected,
+    control: {
+      boxSizing: "border-box",
+      display: "inline-flex",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: value(props.gap, 7),
+      whiteSpace: "nowrap",
+      background: selected ? props.selectedBackground : props.background,
+      color: selected ? props.selectedColor : props.color,
+      borderWidth: value(props.borderWidth, 1),
+      borderStyle: value(props.borderStyle, "solid"),
+      borderColor: selected ? props.selectedBorderColor : props.borderColor,
+      borderRadius: value(props.radius, 999),
+      padding: `${value(props.paddingY, 9)}px ${value(props.paddingX, 17)}px`,
+      fontSize: value(props.fontSize, 13),
+      cursor: "pointer",
+      transition: "background .15s ease, color .15s ease, border-color .15s ease, transform .15s ease",
+    },
+    count: { fontSize: ".8em", opacity: .7 },
+  };
+}
+
 export function createSectionStyles(props = {}) {
   const resolved = createBackgroundStyles(props.background);
   return {

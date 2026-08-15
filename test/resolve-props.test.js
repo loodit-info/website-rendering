@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { createButtonStyles, createFormChoiceStyles, createFormFieldStyles, createFormMessageStyles, createFormStyles, createGalleryStyles, createGridStyles, createHeroStyles, createIconButtonStyles, createImageStyles, createLinkStyles, createLogoStyles, createNavbarStyles, createSectionStyles, createStackStyles, createTypographyStyles, normalizeSiteStyles, resolveNodeProps } from "../src/index.js";
+import { createButtonStyles, createCardStyles, createFilterChipStyles, createFilterFieldStyles, createFilterStyles, createFormChoiceStyles, createFormFieldStyles, createFormMessageStyles, createFormStyles, createGalleryStyles, createGridStyles, createHeroStyles, createIconButtonStyles, createImageStyles, createLinkStyles, createLogoStyles, createMediaItemStyles, createNavbarStyles, createSectionStyles, createStackStyles, createTypographyStyles, normalizeSiteStyles, resolveNodeProps } from "../src/index.js";
 
 const styles = normalizeSiteStyles({
   colors: { primary: "#123456", text: "#202020" },
@@ -168,6 +168,30 @@ test("resolves icon-button placement, hover and badge styles", () => {
   assert.equal(result.control["--loodit-icon-button-hover-bg"], "#eeeeee");
   assert.equal(result.badge.background, "#990000");
   assert.equal(result.badge.height, 18);
+});
+
+test("resolves card and media surfaces, spacing and hover lift", () => {
+  const card = createCardStyles({ padding: 24, gap: 19, radius: 18, shadow: "large", hoverLift: true, maxWidth: 460 });
+  const media = createMediaItemStyles({ padding: 12, radius: 16, hoverOverlay: true });
+  assert.equal(card.container.padding, 24);
+  assert.equal(card.container.boxShadow, "0 22px 55px #17221d26");
+  assert.equal(card.content.gap, 19);
+  assert.equal(card.hoverLift, true);
+  assert.equal(media.container.height, "100%");
+  assert.equal(media.hoverLift, true);
+});
+
+test("resolves filter container, field, select and chip states", () => {
+  const filter = createFilterStyles({ padding: 14, gap: 12, radius: 24, shadow: "medium", maxWidth: 1180 }, { breakpoint: "mobile" });
+  const field = createFilterFieldStyles({ height: 54, paddingX: 16, borderColor: "#e1e6e3", radius: 14 });
+  const chip = createFilterChipStyles({ selectedBackground: "#edf3ef", selectedColor: "#17221d", selectedBorderColor: "#edf3ef", radius: 999 }, { selected: true });
+  assert.equal(filter.container.width, "calc(100% - 24px)");
+  assert.equal(filter.container.padding, 16);
+  assert.equal(filter.content.gap, 12);
+  assert.equal(field.control.minHeight, 54);
+  assert.equal(field.menu.borderRadius, 14);
+  assert.equal(chip.control.background, "#edf3ef");
+  assert.equal(chip.selected, true);
 });
 
 test("button width and visual properties come from configuration", () => {
