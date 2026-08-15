@@ -9,11 +9,15 @@ breakpoint into one resolved property map.
 
 ## Local development
 
-Both consumers currently install the sibling package with:
+Both consumers currently install the same packed `0.1.0` artifact from their
+checked-in `vendor/` directories:
 
 ```json
-"@loodit/website-rendering": "file:../website-rendering"
+"@loodit/website-rendering": "file:vendor/loodit-website-rendering-0.1.0.tgz"
 ```
+
+The tarballs have the same integrity checksum and keep each independently
+deployed repository self-contained until the private registry is connected.
 
 Run its contract tests with:
 
