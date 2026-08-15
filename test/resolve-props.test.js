@@ -241,6 +241,7 @@ test("resolves composite and not-found section shells responsively", () => {
   const missing = createCompositeSectionStyles({ template: "dark", paddingX: 48, paddingY: 80, minHeight: 680, maxWidth: 1240 }, { type: "notFound", breakpoint: "mobile" });
   assert.equal(feature.container.padding, "48px 20px");
   assert.equal(feature.content.maxWidth, 1240);
+  assert.equal(feature.content.gap, 40);
   assert.equal(missing.container.background, "#10231b");
   assert.equal(missing.container.minHeight, 520);
   assert.equal(missing.container.display, "flex");
@@ -255,6 +256,11 @@ test("button width and visual properties come from configuration", () => {
   assert.equal(result.control.borderRadius, 5);
   assert.equal(result.control["--site-button-hover-bg"], "#234567");
   assert.equal(result.control.fontSize, 15);
+});
+
+test("supports the builder full-width button mode", () => {
+  const result = createButtonStyles({ widthMode: "full" });
+  assert.equal(result.wrapper.width, "100%");
 });
 
 test("a button inside a row or grid preserves the parent cross-axis alignment", () => {
