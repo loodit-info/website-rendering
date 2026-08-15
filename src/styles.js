@@ -338,6 +338,72 @@ export function createMediaItemStyles(props = {}) {
   };
 }
 
+export function createFooterStyles(props = {}, options = {}) {
+  const breakpoint = value(options.breakpoint, "desktop");
+  const mobile = breakpoint === "mobile";
+  const tablet = breakpoint === "tablet";
+  const paddingX = mobile ? Math.min(value(props.paddingX, 48), 24) : tablet ? Math.min(value(props.paddingX, 48), 32) : value(props.paddingX, 48);
+  const paddingY = mobile ? Math.min(value(props.paddingY, 56), 44) : value(props.paddingY, 56);
+  return {
+    template: value(props.template, "basic"),
+    container: {
+      ...createBackgroundStyles(props.background).background,
+      "--loodit-footer-tablet-padding-x": `${Math.min(value(props.paddingX, 48), 32)}px`,
+      "--loodit-footer-mobile-padding-x": `${Math.min(value(props.paddingX, 48), 24)}px`,
+      "--loodit-footer-mobile-padding-y": `${Math.min(value(props.paddingY, 56), 44)}px`,
+      "--loodit-footer-mobile-gap": `${value(props.mobileGap, 28)}px`,
+      boxSizing: "border-box",
+      position: "relative",
+      width: "100%",
+      padding: `${paddingY}px ${paddingX}px`,
+    },
+    content: { display: "flex", flexDirection: "column", gap: mobile ? value(props.mobileGap, 28) : value(props.gap, 34), width: "100%", maxWidth: props.maxWidth, margin: props.maxWidth ? "0 auto" : 0 },
+  };
+}
+
+export function createAccordionStyles(props = {}, options = {}) {
+  const mobile = options.breakpoint === "mobile";
+  const template = value(props.template, "minimal");
+  const templatePadding = template === "dark" ? 22 : template === "helpCentre" ? 28 : props.padding;
+  const templateBackground = template === "dark" ? "#101b16" : template === "helpCentre" ? "#f5f8f6" : props.background;
+  const templateRadius = template === "dark" ? 22 : template === "helpCentre" ? 24 : props.radius;
+  return {
+    template,
+    container: {
+      ...createSurfaceStyles({ ...props, padding: mobile && (template === "dark" || template === "helpCentre") ? 16 : templatePadding, background: templateBackground, radius: templateRadius }),
+      boxSizing: "border-box",
+      width: `calc(100% - ${mobile ? 24 : 32}px)`,
+      maxWidth: template === "split" ? value(props.maxWidth, 1180) : props.maxWidth,
+      margin: "24px auto",
+    },
+    content: { display: "flex", flexDirection: "column", gap: value(props.gap, 10), width: "100%", minWidth: 0 },
+  };
+}
+
+export function createAccordionItemStyles(props = {}, options = {}) {
+  const open = Boolean(options.open);
+  const iconType = value(props.icon, "plus");
+  return {
+    open,
+    iconName: iconType === "chevron" ? "ChevronDown" : open ? "Minus" : "Plus",
+    iconOnLeft: props.iconPosition === "left",
+    item: {
+      boxSizing: "border-box",
+      overflow: "hidden",
+      background: open ? value(props.activeBackground, props.background) : props.background,
+      color: props.color,
+      borderWidth: value(props.borderWidth, 1),
+      borderStyle: value(props.borderStyle, "solid"),
+      borderColor: value(props.borderColor, "#dfe5e1"),
+      borderRadius: value(props.radius, 12),
+    },
+    trigger: { boxSizing: "border-box", width: "100%", padding: `${value(props.paddingY, 18)}px ${value(props.paddingX, 20)}px`, border: 0, background: "transparent", color: props.color, display: "flex", alignItems: "center", justifyContent: "space-between", gap: value(props.triggerGap, 20), textAlign: "left", fontFamily: "inherit", fontSize: value(props.questionFontSize, 16), fontWeight: value(props.questionFontWeight, 700), lineHeight: value(props.questionLineHeight, 1.35), cursor: "pointer" },
+    question: { flex: 1 },
+    icon: { flex: "none", transform: open && iconType === "chevron" ? "rotate(180deg)" : undefined, transition: `transform ${value(props.transitionDuration, 220)}ms ease` },
+    answer: { boxSizing: "border-box", color: props.answerColor, padding: `0 ${value(props.paddingX, 20)}px ${value(props.paddingY, 18)}px`, lineHeight: value(props.answerLineHeight, 1.65) },
+  };
+}
+
 export function createFilterStyles(props = {}, options = {}) {
   const mobile = options.breakpoint === "mobile";
   const filterShadow = props.shadow === "small" ? "0 5px 18px #17221d12" : props.shadow === "large" ? "0 24px 60px #17221d24" : props.shadow === "none" ? "none" : "0 14px 38px #17221d18";

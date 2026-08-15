@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { createButtonStyles, createCardStyles, createFilterChipStyles, createFilterFieldStyles, createFilterStyles, createFormChoiceStyles, createFormFieldStyles, createFormMessageStyles, createFormStyles, createGalleryStyles, createGridStyles, createHeroStyles, createIconButtonStyles, createImageStyles, createLinkStyles, createLogoStyles, createMediaItemStyles, createNavbarStyles, createSectionStyles, createStackStyles, createTypographyStyles, normalizeSiteStyles, resolveNodeProps } from "../src/index.js";
+import { createAccordionItemStyles, createAccordionStyles, createButtonStyles, createCardStyles, createFilterChipStyles, createFilterFieldStyles, createFilterStyles, createFooterStyles, createFormChoiceStyles, createFormFieldStyles, createFormMessageStyles, createFormStyles, createGalleryStyles, createGridStyles, createHeroStyles, createIconButtonStyles, createImageStyles, createLinkStyles, createLogoStyles, createMediaItemStyles, createNavbarStyles, createSectionStyles, createStackStyles, createTypographyStyles, normalizeSiteStyles, resolveNodeProps } from "../src/index.js";
 
 const styles = normalizeSiteStyles({
   colors: { primary: "#123456", text: "#202020" },
@@ -192,6 +192,27 @@ test("resolves filter container, field, select and chip states", () => {
   assert.equal(field.menu.borderRadius, 14);
   assert.equal(chip.control.background, "#edf3ef");
   assert.equal(chip.selected, true);
+});
+
+test("resolves footer spacing and responsive layout", () => {
+  const desktop = createFooterStyles({ template: "columns", background: "#17221d", paddingX: 48, paddingY: 56, gap: 34, maxWidth: 1280 });
+  const mobile = createFooterStyles({ paddingX: 48, paddingY: 56, mobileGap: 26 }, { breakpoint: "mobile" });
+  assert.equal(desktop.container.padding, "56px 48px");
+  assert.equal(desktop.content.maxWidth, 1280);
+  assert.equal(desktop.content.gap, 34);
+  assert.equal(mobile.container.padding, "44px 24px");
+  assert.equal(mobile.content.gap, 26);
+});
+
+test("resolves accordion container, open state and icon placement", () => {
+  const accordion = createAccordionStyles({ template: "dark", maxWidth: 960, gap: 12 });
+  const item = createAccordionItemStyles({ icon: "chevron", iconPosition: "left", background: "#ffffff", activeBackground: "#f7faf8", paddingX: 20, paddingY: 18 }, { open: true });
+  assert.equal(accordion.container.background, "#101b16");
+  assert.equal(accordion.content.gap, 12);
+  assert.equal(item.item.background, "#f7faf8");
+  assert.equal(item.iconName, "ChevronDown");
+  assert.equal(item.iconOnLeft, true);
+  assert.equal(item.icon.transform, "rotate(180deg)");
 });
 
 test("button width and visual properties come from configuration", () => {
