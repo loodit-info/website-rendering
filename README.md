@@ -13,7 +13,7 @@ Both consumers currently install the same packed `0.1.0` artifact from their
 checked-in `vendor/` directories:
 
 ```json
-    "@loodit/website-rendering": "file:vendor/loodit-website-rendering-0.3.0.tgz"
+    "@loodit/website-rendering": "file:vendor/loodit-website-rendering-0.3.2.tgz"
 ```
 
 The tarballs have the same integrity checksum and keep each independently

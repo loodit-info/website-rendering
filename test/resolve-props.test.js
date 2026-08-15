@@ -110,6 +110,12 @@ test("button width and visual properties come from configuration", () => {
   assert.equal(result.control.fontSize, 15);
 });
 
+test("a button inside a row or grid preserves the parent cross-axis alignment", () => {
+  const result = createButtonStyles({ widthMode: "auto", align: "left" }, { preserveParentCrossAxis: true });
+  assert.equal(result.wrapper.alignSelf, undefined);
+  assert.equal(result.wrapper.width, "auto");
+});
+
 test("section, stack, and grid layout styles come from configuration", () => {
   const section = createSectionStyles({ paddingX: 32, paddingY: 48, minHeight: 500, overflow: "hidden", background: { type: "gradient", gradient: { angle: 90, start: "#000", end: "#fff" }, overlay: { enabled: true, color: "#111", opacity: 25 } } });
   const stack = createStackStyles({ direction: "row", gap: 18, widthMode: "fixed", width: 640, align: "center", justify: "between" });

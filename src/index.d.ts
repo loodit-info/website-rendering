@@ -31,7 +31,7 @@ export function resolveNodeProps(input: {
 export const DEFAULT_COMPONENT_STYLES: Readonly<Record<string, Readonly<Record<string, Readonly<StyleMap>>>>>;
 export function createBackgroundStyles(value?: unknown): { background: StyleMap; overlay: PropertyMap };
 export function createSurfaceStyles(props?: PropertyMap): StyleMap;
-export function createButtonStyles(props?: PropertyMap): { wrapper: StyleMap; control: StyleMap; icon: StyleMap };
+export function createButtonStyles(props?: PropertyMap, options?: PropertyMap): { wrapper: StyleMap; control: StyleMap; icon: StyleMap };
 export function createSectionStyles(props?: PropertyMap): { container: StyleMap; background: StyleMap; overlay: StyleMap; overlayEnabled: boolean; content: StyleMap };
 export function createStackStyles(props?: PropertyMap, options?: PropertyMap): StyleMap;
 export function createGridStyles(props?: PropertyMap, options?: PropertyMap): { scrolling: boolean; reverse: boolean; style: StyleMap };

@@ -88,13 +88,13 @@ export function createLogoStyles(props = {}) {
   };
 }
 
-export function createButtonStyles(props = {}) {
+export function createButtonStyles(props = {}, options = {}) {
   const disabled = Boolean(props.disabled);
   const width = props.widthMode === "fill" ? "100%" : props.widthMode === "fixed" ? props.width : "auto";
   const background = disabled ? value(props.disabledBackground, "#cbd5cf") : value(props.background, "#286b4c");
   const color = disabled ? value(props.disabledColor, "#718078") : value(props.color, "#ffffff");
   return {
-    wrapper: { alignSelf: align(props.align), width },
+    wrapper: { alignSelf: options.preserveParentCrossAxis ? undefined : align(props.align), width },
     control: {
       "--wb-button-hover-bg": value(props.hoverBackground, background),
       "--wb-button-hover-color": value(props.hoverColor, color),
