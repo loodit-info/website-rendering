@@ -1,5 +1,6 @@
 export type WebsiteBreakpoint = "desktop" | "tablet" | "mobile";
 export type PropertyMap = Record<string, unknown>;
+export type StyleMap = Record<string, string | number | undefined>;
 
 export interface WebsiteNode {
   id?: string;
@@ -27,3 +28,18 @@ export function resolveNodeProps(input: {
   breakpoint?: WebsiteBreakpoint;
   siteStyles?: WebsiteSiteStyles;
 }): PropertyMap;
+export const DEFAULT_COMPONENT_STYLES: Readonly<Record<string, Readonly<Record<string, Readonly<StyleMap>>>>>;
+export function createLogoStyles(props?: PropertyMap): {
+  mode: unknown;
+  container: StyleMap;
+  link: StyleMap;
+  wordmark: StyleMap;
+  image: StyleMap;
+};
+export function createFormFieldStyles(props?: PropertyMap): {
+  container: StyleMap;
+  label: StyleMap;
+  requiredMarker: StyleMap;
+  control: StyleMap;
+  helpText: StyleMap;
+};

@@ -13,7 +13,7 @@ Both consumers currently install the same packed `0.1.0` artifact from their
 checked-in `vendor/` directories:
 
 ```json
-"@loodit/website-rendering": "file:vendor/loodit-website-rendering-0.1.0.tgz"
+    "@loodit/website-rendering": "file:vendor/loodit-website-rendering-0.2.1.tgz"
 ```
 
 The tarballs have the same integrity checksum and keep each independently
@@ -37,6 +37,8 @@ different resolver versions.
 
 ```js
 import {
+  createFormFieldStyles,
+  createLogoStyles,
   normalizeSiteStyles,
   resolveNodeProps,
 } from "@loodit/website-rendering";
@@ -47,7 +49,16 @@ const props = resolveNodeProps({
   breakpoint: "desktop",
   siteStyles,
 });
+
+const formFieldStyles = createFormFieldStyles(props);
+const logoStyles = createLogoStyles(props);
 ```
+
+Semantic component-part styles are shared as plain style objects. Renderers
+retain their framework-specific markup while consuming the same values for
+parts such as form labels, required markers, controls, and help text. Logo
+containers, links, images, and wordmarks use the same contract, including
+configured dimensions, positioning, alignment, spacing, and typography.
 
 The precedence contract is:
 
