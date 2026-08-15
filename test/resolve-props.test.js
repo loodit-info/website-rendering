@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { createButtonStyles, createFormChoiceStyles, createFormFieldStyles, createFormMessageStyles, createFormStyles, createGalleryStyles, createGridStyles, createImageStyles, createLogoStyles, createNavbarStyles, createSectionStyles, createStackStyles, createTypographyStyles, normalizeSiteStyles, resolveNodeProps } from "../src/index.js";
+import { createButtonStyles, createFormChoiceStyles, createFormFieldStyles, createFormMessageStyles, createFormStyles, createGalleryStyles, createGridStyles, createHeroStyles, createImageStyles, createLogoStyles, createNavbarStyles, createSectionStyles, createStackStyles, createTypographyStyles, normalizeSiteStyles, resolveNodeProps } from "../src/index.js";
 
 const styles = normalizeSiteStyles({
   colors: { primary: "#123456", text: "#202020" },
@@ -138,6 +138,16 @@ test("resolves image sizing, placement and overlays through one contract", () =>
   assert.equal(result.image.objectPosition, "right top");
   assert.equal(result.image.opacity, .8);
   assert.equal(result.overlay.background, "linear-gradient(90deg, #111111, #222222)");
+});
+
+test("centers hero content within the configured minimum height", () => {
+  const result = createHeroStyles({ background: "#f6f8f6", paddingX: 56, paddingY: 72, minHeight: 620, maxWidth: 1280, contentAlign: "center" });
+  assert.equal(result.container.display, "flex");
+  assert.equal(result.container.alignItems, "center");
+  assert.equal(result.container.minHeight, 620);
+  assert.equal(result.container.padding, "72px 56px");
+  assert.equal(result.content.maxWidth, 1280);
+  assert.equal(result.content.textAlign, "center");
 });
 
 test("button width and visual properties come from configuration", () => {

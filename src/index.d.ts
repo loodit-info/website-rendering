@@ -35,6 +35,7 @@ export function createButtonStyles(props?: PropertyMap, options?: PropertyMap): 
 export function createTypographyStyles(props?: PropertyMap, options?: PropertyMap): StyleMap;
 export function createImageStyles(props?: PropertyMap): { hoverOverlayEnabled: boolean; overlayEnabled: boolean; frame: StyleMap; image: StyleMap; overlay: StyleMap };
 export function createSectionStyles(props?: PropertyMap): { container: StyleMap; background: StyleMap; overlay: StyleMap; overlayEnabled: boolean; content: StyleMap };
+export function createHeroStyles(props?: PropertyMap, options?: PropertyMap): { template: unknown; reverse: boolean; mobileMediaFirst: boolean; container: StyleMap; content: StyleMap };
 export function createStackStyles(props?: PropertyMap, options?: PropertyMap): StyleMap;
 export function createGridStyles(props?: PropertyMap, options?: PropertyMap): { scrolling: boolean; reverse: boolean; style: StyleMap };
 export function createGalleryStyles(props?: PropertyMap, options?: PropertyMap): { template: unknown; container: StyleMap; grid: StyleMap; item(index: number): StyleMap };

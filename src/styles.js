@@ -226,6 +226,33 @@ export function createSectionStyles(props = {}) {
   };
 }
 
+export function createHeroStyles(props = {}, options = {}) {
+  const breakpoint = value(options.breakpoint, "desktop");
+  const mobile = breakpoint === "mobile";
+  const tablet = breakpoint === "tablet";
+  const paddingX = mobile ? Math.min(value(props.paddingX, 56), 24) : tablet ? Math.min(value(props.paddingX, 56), 36) : value(props.paddingX, 56);
+  const paddingY = mobile ? Math.min(value(props.paddingY, 72), 48) : value(props.paddingY, 72);
+  return {
+    template: value(props.template, "split"),
+    reverse: Boolean(props.reverse),
+    mobileMediaFirst: Boolean(props.mobileMediaFirst),
+    container: {
+      ...createBackgroundStyles(value(options.background, props.background)).background,
+      "--loodit-hero-mobile-padding-x": `${Math.min(value(props.paddingX, 56), 24)}px`,
+      "--loodit-hero-mobile-padding-y": `${Math.min(value(props.paddingY, 72), 48)}px`,
+      "--loodit-hero-tablet-padding-x": `${Math.min(value(props.paddingX, 56), 36)}px`,
+      boxSizing: "border-box",
+      width: "100%",
+      display: "flex",
+      alignItems: "center",
+      overflow: "hidden",
+      padding: `${paddingY}px ${paddingX}px`,
+      minHeight: mobile ? undefined : props.minHeight,
+    },
+    content: { width: "100%", maxWidth: props.maxWidth, margin: "auto", textAlign: value(props.contentAlign, "left") },
+  };
+}
+
 export function createStackStyles(props = {}, options = {}) {
   const direction = value(options.direction, value(props.direction, "column"));
   const alignment = value(options.align, props.align);
