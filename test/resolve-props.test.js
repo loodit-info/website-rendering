@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { createButtonStyles, createFormFieldStyles, createGalleryStyles, createGridStyles, createLogoStyles, createNavbarStyles, createSectionStyles, createStackStyles, normalizeSiteStyles, resolveNodeProps } from "../src/index.js";
+import { createButtonStyles, createFormChoiceStyles, createFormFieldStyles, createFormMessageStyles, createFormStyles, createGalleryStyles, createGridStyles, createLogoStyles, createNavbarStyles, createSectionStyles, createStackStyles, normalizeSiteStyles, resolveNodeProps } from "../src/index.js";
 
 const styles = normalizeSiteStyles({
   colors: { primary: "#123456", text: "#202020" },
@@ -82,7 +82,24 @@ test("creates one semantic style contract for every form-field part", () => {
   assert.equal(result.control.borderColor, "#123456");
   assert.equal(result.control.background, "#fafafa");
   assert.equal(result.control.color, "#111111");
+  assert.equal(result.textarea.resize, "vertical");
   assert.equal(result.helpText.fontSize, 11);
+});
+
+test("creates one semantic style contract for complete forms", () => {
+  const form = createFormStyles({ columns: 2, padding: 32, gap: 18, maxWidth: 800, shadow: "medium" }, { breakpoint: "mobile", state: "loading" });
+  const choice = createFormChoiceStyles({ color: "#123456", accentColor: "#654321", disabled: true });
+  const message = createFormMessageStyles({ color: "#245c3c", errorColor: "#9b3025", fontSize: 14 }, { state: "error" });
+
+  assert.equal(form.container.display, "flex");
+  assert.equal(form.container.padding, 22);
+  assert.equal(form.container.width, "calc(100% - 24px)");
+  assert.equal(form.container.pointerEvents, "none");
+  assert.equal(form.grid.gridTemplateColumns, "repeat(1, minmax(0, 1fr))");
+  assert.equal(choice.control.accentColor, "#654321");
+  assert.equal(choice.container.opacity, .55);
+  assert.equal(message.current.color, "#9b3025");
+  assert.equal(message.current.fontSize, 14);
 });
 
 test("creates one semantic style contract for every logo part", () => {

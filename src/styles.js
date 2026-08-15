@@ -63,6 +63,16 @@ export const DEFAULT_COMPONENT_STYLES = Object.freeze({
     }),
     helpText: Object.freeze({ color: "#7b877f", fontSize: 11 }),
   }),
+  formChoice: Object.freeze({
+    container: Object.freeze({ display: "flex", alignItems: "flex-start", gap: 10, minWidth: 0, fontSize: 13, lineHeight: 1.5 }),
+    control: Object.freeze({ width: 17, height: 17, margin: "1px 0 0", flex: "0 0 auto" }),
+  }),
+  formMessage: Object.freeze({
+    container: Object.freeze({ margin: 0, padding: "11px 13px", borderRadius: 9, fontWeight: 650 }),
+    success: Object.freeze({ background: "#edf6f0", color: "#286b4c" }),
+    error: Object.freeze({ background: "#fff0ee", color: "#a4382c" }),
+    loading: Object.freeze({ display: "flex", alignItems: "center", gap: 8, background: "#f3f6f4", color: "#52635a" }),
+  }),
 });
 
 export function createLogoStyles(props = {}) {
@@ -260,20 +270,77 @@ export function createNavbarStyles(props = {}, options = {}) {
   };
 }
 
-export function createFormFieldStyles(props = {}) {
-  const defaults = DEFAULT_COMPONENT_STYLES.formField;
+export function createFormStyles(props = {}, options = {}) {
+  const mobile = options.breakpoint === "mobile";
+  const state = value(options.state, "default");
+  const formShadow = props.shadow === "medium" ? "0 14px 38px #17221d18" : props.shadow === "large" ? "0 24px 60px #17221d24" : props.shadow === "none" ? "none" : "0 5px 18px #17221d12";
   return {
-    container: { ...defaults.container, gridColumn: `span ${value(props.span, 1)}` },
+    container: {
+      ...createSurfaceStyles({ ...props, padding: mobile ? Math.min(value(props.padding, 32), 22) : props.padding }),
+      position: "relative",
+      "--loodit-form-mobile-padding": `${Math.min(value(props.padding, 32), 22)}px`,
+      display: "flex",
+      flexDirection: "column",
+      width: `calc(100% - ${mobile ? 24 : 32}px)`,
+      maxWidth: props.maxWidth,
+      margin: "22px auto",
+      gap: value(props.gap, 20),
+      boxShadow: formShadow,
+      pointerEvents: state === "loading" ? "none" : undefined,
+      opacity: state === "loading" ? .78 : 1,
+    },
+    grid: {
+      display: "grid",
+      gridTemplateColumns: `repeat(${mobile ? 1 : Math.max(1, Number(value(props.columns, 1)) || 1)}, minmax(0, 1fr))`,
+      gap: value(props.gap, 20),
+      width: "100%",
+    },
+    loadingOverlay: { position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: 9, borderRadius: "inherit", background: "#ffffffc7", color: "#52635a" },
+  };
+}
+
+export function createFormFieldStyles(props = {}, options = {}) {
+  const defaults = DEFAULT_COMPONENT_STYLES.formField;
+  const disabled = Boolean(props.disabled);
+  return {
+    container: { ...defaults.container, gridColumn: `span ${options.breakpoint === "mobile" ? 1 : value(props.span, 1)}` },
     label: { ...defaults.label },
     requiredMarker: { ...defaults.requiredMarker },
     control: {
       ...defaults.control,
+      "--loodit-form-focus-border": value(props.focusBorderColor, value(props.borderColor, "#4d8b68")),
+      "--loodit-form-focus-ring": value(props.focusRing, "0 0 0 3px #4d8b6824"),
       minHeight: value(props.height, defaults.control.minHeight),
       borderColor: value(props.borderColor, defaults.control.borderColor),
       borderRadius: value(props.radius, defaults.control.borderRadius),
       background: value(props.background, defaults.control.background),
       color: value(props.color, defaults.control.color),
+      opacity: disabled ? value(props.disabledOpacity, 55) / 100 : 1,
+      cursor: disabled ? "not-allowed" : undefined,
     },
+    textarea: { resize: value(props.resize, "vertical"), lineHeight: value(props.lineHeight, 1.5), minHeight: value(props.height, 120) },
     helpText: { ...defaults.helpText },
+  };
+}
+
+export function createFormChoiceStyles(props = {}) {
+  const defaults = DEFAULT_COMPONENT_STYLES.formChoice;
+  const disabled = Boolean(props.disabled);
+  return {
+    container: { ...defaults.container, color: props.color, opacity: disabled ? value(props.disabledOpacity, 55) / 100 : 1, cursor: disabled ? "not-allowed" : undefined },
+    control: { ...defaults.control, accentColor: value(props.accentColor, "#286b4c"), cursor: disabled ? "not-allowed" : undefined },
+    label: { minWidth: 0 },
+  };
+}
+
+export function createFormMessageStyles(props = {}, options = {}) {
+  const defaults = DEFAULT_COMPONENT_STYLES.formMessage;
+  const fontSize = value(props.fontSize, 13);
+  return {
+    container: { ...defaults.container, fontSize },
+    success: { ...defaults.container, ...defaults.success, color: value(props.color, defaults.success.color), fontSize },
+    error: { ...defaults.container, ...defaults.error, color: value(props.errorColor, defaults.error.color), fontSize },
+    loading: { ...defaults.container, ...defaults.loading, fontSize },
+    current: options.state === "error" ? { ...defaults.container, ...defaults.error, color: value(props.errorColor, defaults.error.color), fontSize } : options.state === "loading" ? { ...defaults.container, ...defaults.loading, fontSize } : { ...defaults.container, ...defaults.success, color: value(props.color, defaults.success.color), fontSize },
   };
 }

@@ -37,6 +37,7 @@ export function createStackStyles(props?: PropertyMap, options?: PropertyMap): S
 export function createGridStyles(props?: PropertyMap, options?: PropertyMap): { scrolling: boolean; reverse: boolean; style: StyleMap };
 export function createGalleryStyles(props?: PropertyMap, options?: PropertyMap): { template: unknown; container: StyleMap; grid: StyleMap; item(index: number): StyleMap };
 export function createNavbarStyles(props?: PropertyMap, options?: PropertyMap): { showScrolled: boolean; solidState: boolean; effectivePosition: unknown; style: StyleMap };
+export function createFormStyles(props?: PropertyMap, options?: PropertyMap): { container: StyleMap; grid: StyleMap; loadingOverlay: StyleMap };
 export function createLogoStyles(props?: PropertyMap): {
   mode: unknown;
   container: StyleMap;
@@ -44,10 +45,13 @@ export function createLogoStyles(props?: PropertyMap): {
   wordmark: StyleMap;
   image: StyleMap;
 };
-export function createFormFieldStyles(props?: PropertyMap): {
+export function createFormFieldStyles(props?: PropertyMap, options?: PropertyMap): {
   container: StyleMap;
   label: StyleMap;
   requiredMarker: StyleMap;
   control: StyleMap;
+  textarea: StyleMap;
   helpText: StyleMap;
 };
+export function createFormChoiceStyles(props?: PropertyMap): { container: StyleMap; control: StyleMap; label: StyleMap };
+export function createFormMessageStyles(props?: PropertyMap, options?: PropertyMap): { container: StyleMap; success: StyleMap; error: StyleMap; loading: StyleMap; current: StyleMap };
