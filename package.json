@@ -1,6 +1,6 @@
 {
   "name": "@loodit/website-rendering",
-  "version": "0.12.3",
+  "version": "0.13.0",
   "description": "Framework-neutral schema and property resolution for Loodit website renderers.",
   "type": "module",
   "private": true,

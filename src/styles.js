@@ -126,6 +126,29 @@ export function createTypographyStyles(props = {}, options = {}) {
   };
 }
 
+export function createInlineInputStyles(props = {}, options = {}) {
+  const mobile = options.breakpoint === "mobile";
+  const fixed = props.widthMode === "fixed";
+  const iconOnly = props.buttonDisplayMode === "icon";
+  return {
+    iconOnly,
+    showIcon: props.buttonDisplayMode === "icon" || props.buttonDisplayMode === "iconText",
+    iconOnRight: props.buttonIconPosition !== "left",
+    form: { boxSizing: "border-box", display: "flex", width: mobile ? "100%" : fixed ? props.width : "100%", maxWidth: value(props.maxWidth, 720), height: value(props.height, 46), overflow: "hidden", borderWidth: value(props.borderWidth, 1), borderStyle: "solid", borderColor: value(props.borderColor, "#ffffff35"), borderRadius: value(props.radius, 9), background: props.background },
+    input: { boxSizing: "border-box", minWidth: 0, flex: 1, width: "100%", border: 0, outline: 0, padding: `0 ${value(props.paddingX, 14)}px`, background: "transparent", color: props.color, font: "inherit" },
+    button: { "--loodit-inline-submit-hover": value(props.buttonHoverBackground, props.buttonBackground), boxSizing: "border-box", flex: "none", minWidth: iconOnly ? value(props.height, 46) : undefined, height: "100%", padding: iconOnly ? 0 : `0 ${value(props.buttonPaddingX, 17)}px`, border: 0, display: "inline-flex", alignItems: "center", justifyContent: "center", gap: value(props.buttonGap, 7), background: props.buttonBackground, color: props.buttonColor, fontFamily: "inherit", fontWeight: value(props.buttonFontWeight, 700), whiteSpace: "nowrap", cursor: "pointer" },
+  };
+}
+
+export function createSocialStyles(props = {}) {
+  const shape = value(props.shape, "circle");
+  const itemSize = value(props.itemSize, 34);
+  return {
+    container: { display: "flex", alignItems: "center", justifyContent: align(props.align), flexWrap: "wrap", gap: value(props.gap, 9), color: props.color },
+    link: { "--loodit-social-hover-bg": value(props.hoverBackground, "#ffffff12"), "--loodit-social-hover-color": value(props.hoverColor, props.color), boxSizing: "border-box", width: itemSize, height: itemSize, borderWidth: value(props.borderWidth, 1), borderStyle: "solid", borderColor: value(props.borderColor, "currentColor"), borderRadius: shape === "square" ? value(props.radius, 6) : shape === "rounded" ? value(props.radius, 10) : 999, display: "grid", placeItems: "center", background: props.background, color: "inherit", textDecoration: "none", transition: "transform .15s ease, background-color .15s ease, color .15s ease" },
+  };
+}
+
 export function createImageStyles(props = {}) {
   const imagePosition = value(props.position, "center center");
   const horizontalPosition = value(props.align, String(imagePosition).split(" ")[0]);

@@ -45,6 +45,8 @@ export function createFilterStyles(props?: PropertyMap, options?: PropertyMap): 
 export function createFilterFieldStyles(props?: PropertyMap): { container: StyleMap; label: StyleMap; control: StyleMap; input: StyleMap; trigger: StyleMap; value: StyleMap; placeholder: StyleMap; menu: StyleMap; option: StyleMap; selectedOption: StyleMap };
 export function createFilterChipStyles(props?: PropertyMap, options?: PropertyMap): { selected: boolean; control: StyleMap; count: StyleMap };
 export function createTypographyStyles(props?: PropertyMap, options?: PropertyMap): StyleMap;
+export function createInlineInputStyles(props?: PropertyMap, options?: PropertyMap): { iconOnly: boolean; showIcon: boolean; iconOnRight: boolean; form: StyleMap; input: StyleMap; button: StyleMap };
+export function createSocialStyles(props?: PropertyMap): { container: StyleMap; link: StyleMap };
 export function createImageStyles(props?: PropertyMap): { hoverOverlayEnabled: boolean; overlayEnabled: boolean; frame: StyleMap; image: StyleMap; overlay: StyleMap };
 export function createSectionStyles(props?: PropertyMap): { container: StyleMap; background: StyleMap; overlay: StyleMap; overlayEnabled: boolean; content: StyleMap };
 export function createHeroStyles(props?: PropertyMap, options?: PropertyMap): { template: unknown; reverse: boolean; mobileMediaFirst: boolean; container: StyleMap; content: StyleMap };

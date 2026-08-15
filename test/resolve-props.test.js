@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { createAccordionItemStyles, createAccordionStyles, createButtonStyles, createCardStyles, createCarouselStyles, createCompositeSectionStyles, createFilterChipStyles, createFilterFieldStyles, createFilterStyles, createFooterStyles, createFormChoiceStyles, createFormFieldStyles, createFormMessageStyles, createFormStyles, createGalleryStyles, createGridStyles, createHeroStyles, createIconButtonStyles, createImageStyles, createLinkStyles, createLogoStyles, createMediaItemStyles, createNavbarStyles, createSectionStyles, createStackStyles, createTypographyStyles, normalizeSiteStyles, resolveNodeProps } from "../src/index.js";
+import { createAccordionItemStyles, createAccordionStyles, createButtonStyles, createCardStyles, createCarouselStyles, createCompositeSectionStyles, createFilterChipStyles, createFilterFieldStyles, createFilterStyles, createFooterStyles, createFormChoiceStyles, createFormFieldStyles, createFormMessageStyles, createFormStyles, createGalleryStyles, createGridStyles, createHeroStyles, createIconButtonStyles, createImageStyles, createInlineInputStyles, createLinkStyles, createLogoStyles, createMediaItemStyles, createNavbarStyles, createSectionStyles, createSocialStyles, createStackStyles, createTypographyStyles, normalizeSiteStyles, resolveNodeProps } from "../src/index.js";
 
 const styles = normalizeSiteStyles({
   colors: { primary: "#123456", text: "#202020" },
@@ -138,6 +138,23 @@ test("resolves all configured typography properties through one contract", () =>
 test("keeps typography inline when its configured parent is a row", () => {
   const result = createTypographyStyles({ widthMode: "fill", fontSize: 16 }, { parentDirection: "row" });
   assert.equal(result.width, "auto");
+});
+
+test("resolves inline input sizing and submit presentation", () => {
+  const result = createInlineInputStyles({ widthMode: "fixed", width: 480, maxWidth: 720, height: 48, radius: 12, buttonDisplayMode: "iconText", buttonIconPosition: "left", buttonGap: 9 });
+  assert.equal(result.form.width, 480);
+  assert.equal(result.form.height, 48);
+  assert.equal(result.showIcon, true);
+  assert.equal(result.iconOnRight, false);
+  assert.equal(result.button.gap, 9);
+});
+
+test("resolves social alignment, spacing and icon surfaces", () => {
+  const result = createSocialStyles({ align: "right", gap: 12, itemSize: 40, shape: "rounded", radius: 8, borderWidth: 2 });
+  assert.equal(result.container.justifyContent, "flex-end");
+  assert.equal(result.container.gap, 12);
+  assert.equal(result.link.width, 40);
+  assert.equal(result.link.borderRadius, 8);
 });
 
 test("resolves image sizing, placement and overlays through one contract", () => {
