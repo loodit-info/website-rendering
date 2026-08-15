@@ -215,6 +215,94 @@ export function createButtonStyles(props = {}, options = {}) {
   };
 }
 
+export function createLinkStyles(props = {}, options = {}) {
+  const active = Boolean(options.active);
+  const preset = value(props.activePreset, "underline");
+  const activeTreatment = active && preset !== "none";
+  const activeFill = activeTreatment && (preset === "pill" || props.activeFillEnabled === true);
+  const activeColor = value(props.activeColor, props.color);
+  const thickness = value(props.activeThickness, 2);
+  const offset = value(props.activeOffset, 6);
+  return {
+    active,
+    preset,
+    style: {
+      ...createTypographyStyles(props, { defaultMaxWidth: "100%" }),
+      "--loodit-link-hover-color": value(props.hoverColor, props.color),
+      "--loodit-link-hover-opacity": value(props.hoverOpacity, 90) / 100,
+      "--wb-link-hover": value(props.hoverColor, props.color),
+      display: "inline-flex",
+      alignItems: "center",
+      width: props.widthMode === "fixed" ? props.width : props.widthMode === "fill" ? "100%" : "max-content",
+      maxWidth: value(props.maxWidth, "100%"),
+      alignSelf: options.preserveParentCrossAxis ? undefined : align(props.align),
+      marginLeft: undefined,
+      marginRight: undefined,
+      color: activeTreatment ? activeColor : props.color,
+      fontWeight: activeTreatment ? value(props.activeFontWeight, props.fontWeight) : props.fontWeight,
+      background: activeFill ? value(props.activeFillColor, value(props.activeBackground, "#eaf4ee")) : undefined,
+      borderRadius: activeFill ? value(props.activeRadius, preset === "pill" ? 999 : 8) : undefined,
+      padding: activeFill ? `${value(props.activePaddingY, 7)}px ${value(props.activePaddingX, 11)}px` : undefined,
+      textDecoration: activeTreatment && preset === "underline" ? "underline" : props.underline ? "underline" : "none",
+      textDecorationThickness: activeTreatment && preset === "underline" ? thickness : undefined,
+      textUnderlineOffset: activeTreatment && preset === "underline" ? offset : undefined,
+      borderBottom: activeTreatment && preset === "border" ? `${thickness}px solid ${activeColor}` : undefined,
+      paddingBottom: activeTreatment && preset === "border" && !activeFill ? offset : undefined,
+      transition: `color ${value(props.transitionDuration, 160)}ms ease, opacity ${value(props.transitionDuration, 160)}ms ease, background-color ${value(props.transitionDuration, 160)}ms ease`,
+    },
+  };
+}
+
+export function createIconButtonStyles(props = {}) {
+  const displayMode = value(props.displayMode, "icon");
+  return {
+    showIcon: displayMode !== "text",
+    showText: displayMode !== "icon",
+    iconOnRight: props.iconPosition === "right",
+    control: {
+      "--loodit-icon-button-hover-bg": value(props.hoverBackground, props.background),
+      "--loodit-icon-button-hover-color": value(props.hoverColor, props.color),
+      "--wb-icon-button-hover-bg": value(props.hoverBackground, props.background),
+      "--wb-icon-button-hover-color": value(props.hoverColor, props.color),
+      position: "relative",
+      boxSizing: "border-box",
+      display: "inline-flex",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: value(props.gap, 7),
+      padding: `${value(props.paddingY, 10)}px ${value(props.paddingX, 10)}px`,
+      borderRadius: value(props.radius, 9),
+      borderWidth: value(props.borderWidth, 0),
+      borderStyle: value(props.borderStyle, "solid"),
+      borderColor: value(props.borderColor, "transparent"),
+      background: value(props.background, "transparent"),
+      color: props.color,
+      fontFamily: props.fontFamily,
+      fontSize: props.fontSize,
+      fontWeight: props.fontWeight,
+      lineHeight: value(props.lineHeight, 1),
+      textDecoration: "none",
+      whiteSpace: "nowrap",
+      transition: `background-color ${value(props.transitionDuration, 150)}ms ease, color ${value(props.transitionDuration, 150)}ms ease`,
+    },
+    badge: {
+      position: "absolute",
+      right: value(props.badgeRight, 2),
+      top: value(props.badgeTop, 1),
+      minWidth: value(props.badgeSize, 15),
+      height: value(props.badgeSize, 15),
+      padding: `0 ${value(props.badgePaddingX, 3)}px`,
+      borderRadius: value(props.badgeRadius, 9),
+      background: value(props.badgeBackground, "#286b4c"),
+      color: value(props.badgeColor, "#ffffff"),
+      display: "grid",
+      placeItems: "center",
+      fontSize: value(props.badgeFontSize, 9),
+      lineHeight: 1,
+    },
+  };
+}
+
 export function createSectionStyles(props = {}) {
   const resolved = createBackgroundStyles(props.background);
   return {

@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { createButtonStyles, createFormChoiceStyles, createFormFieldStyles, createFormMessageStyles, createFormStyles, createGalleryStyles, createGridStyles, createHeroStyles, createImageStyles, createLogoStyles, createNavbarStyles, createSectionStyles, createStackStyles, createTypographyStyles, normalizeSiteStyles, resolveNodeProps } from "../src/index.js";
+import { createButtonStyles, createFormChoiceStyles, createFormFieldStyles, createFormMessageStyles, createFormStyles, createGalleryStyles, createGridStyles, createHeroStyles, createIconButtonStyles, createImageStyles, createLinkStyles, createLogoStyles, createNavbarStyles, createSectionStyles, createStackStyles, createTypographyStyles, normalizeSiteStyles, resolveNodeProps } from "../src/index.js";
 
 const styles = normalizeSiteStyles({
   colors: { primary: "#123456", text: "#202020" },
@@ -148,6 +148,26 @@ test("centers hero content within the configured minimum height", () => {
   assert.equal(result.container.padding, "72px 56px");
   assert.equal(result.content.maxWidth, 1280);
   assert.equal(result.content.textAlign, "center");
+});
+
+test("resolves link active, hover and underline treatments", () => {
+  const result = createLinkStyles({ color: "#111111", hoverColor: "#225533", activeColor: "#337744", activePreset: "underline", activeThickness: 3, activeOffset: 7, fontWeight: 500, activeFontWeight: 700 }, { active: true });
+  assert.equal(result.style.color, "#337744");
+  assert.equal(result.style.fontWeight, 700);
+  assert.equal(result.style.textDecoration, "underline");
+  assert.equal(result.style.textDecorationThickness, 3);
+  assert.equal(result.style.textUnderlineOffset, 7);
+  assert.equal(result.style["--loodit-link-hover-color"], "#225533");
+});
+
+test("resolves icon-button placement, hover and badge styles", () => {
+  const result = createIconButtonStyles({ displayMode: "iconText", iconPosition: "right", hoverBackground: "#eeeeee", hoverColor: "#123456", badge: "2", badgeBackground: "#990000", badgeSize: 18 });
+  assert.equal(result.showIcon, true);
+  assert.equal(result.showText, true);
+  assert.equal(result.iconOnRight, true);
+  assert.equal(result.control["--loodit-icon-button-hover-bg"], "#eeeeee");
+  assert.equal(result.badge.background, "#990000");
+  assert.equal(result.badge.height, 18);
 });
 
 test("button width and visual properties come from configuration", () => {
