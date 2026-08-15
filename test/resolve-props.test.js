@@ -54,3 +54,19 @@ test("can opt out of site styles", () => {
   assert.equal(result.color, "#abcdef");
   assert.equal(result.fontSize, 13);
 });
+
+test("preserves configured layout modes for renderer-specific style generation", () => {
+  const grid = resolveNodeProps({
+    node: { type: "grid", props: { columns: 2, columnSizing: "equal", columnRatios: [1.05, .95] } },
+    siteStyles: styles,
+  });
+  const button = resolveNodeProps({
+    node: { type: "button", props: { widthMode: "fixed", width: 180 } },
+    siteStyles: styles,
+  });
+
+  assert.equal(grid.columnSizing, "equal");
+  assert.deepEqual(grid.columnRatios, [1.05, .95]);
+  assert.equal(button.widthMode, "fixed");
+  assert.equal(button.width, 180);
+});
