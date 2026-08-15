@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { createButtonStyles, createFormChoiceStyles, createFormFieldStyles, createFormMessageStyles, createFormStyles, createGalleryStyles, createGridStyles, createLogoStyles, createNavbarStyles, createSectionStyles, createStackStyles, normalizeSiteStyles, resolveNodeProps } from "../src/index.js";
+import { createButtonStyles, createFormChoiceStyles, createFormFieldStyles, createFormMessageStyles, createFormStyles, createGalleryStyles, createGridStyles, createImageStyles, createLogoStyles, createNavbarStyles, createSectionStyles, createStackStyles, createTypographyStyles, normalizeSiteStyles, resolveNodeProps } from "../src/index.js";
 
 const styles = normalizeSiteStyles({
   colors: { primary: "#123456", text: "#202020" },
@@ -114,6 +114,30 @@ test("creates one semantic style contract for every logo part", () => {
   assert.equal(result.wordmark.lineHeight, 1.2);
   assert.equal(result.wordmark.letterSpacing, 1.5);
   assert.equal(result.image.width, 120);
+});
+
+test("resolves all configured typography properties through one contract", () => {
+  const result = createTypographyStyles({ fontFamily: "Georgia", fontSize: 32, fontWeight: 700, lineHeight: 1.2, letterSpacing: 1.5, align: "center", fontStyle: "italic", textDecoration: "underline", widthMode: "fixed", width: 420, maxWidth: 500, wrap: "nowrap" }, { defaultMaxWidth: 800 });
+  assert.equal(result.fontFamily, "Georgia");
+  assert.equal(result.fontSize, 32);
+  assert.equal(result.letterSpacing, 1.5);
+  assert.equal(result.textAlign, "center");
+  assert.equal(result.width, 420);
+  assert.equal(result.maxWidth, 500);
+  assert.equal(result.whiteSpace, "nowrap");
+  assert.equal(result.marginLeft, "auto");
+});
+
+test("resolves image sizing, placement and overlays through one contract", () => {
+  const result = createImageStyles({ widthMode: "fixed", width: 640, maxWidth: 720, heightMode: "fixed", height: 360, aspectRatio: "16 / 9", fit: "contain", position: "right top", opacity: 80, radius: 18, overlayEnabled: true, overlayType: "gradient", overlayColor: "#111111", overlayGradientEnd: "#222222", overlayAngle: 90 });
+  assert.equal(result.frame.width, 640);
+  assert.equal(result.frame.height, 360);
+  assert.equal(result.frame.aspectRatio, "16 / 9");
+  assert.equal(result.frame.marginLeft, "auto");
+  assert.equal(result.image.objectFit, "contain");
+  assert.equal(result.image.objectPosition, "right top");
+  assert.equal(result.image.opacity, .8);
+  assert.equal(result.overlay.background, "linear-gradient(90deg, #111111, #222222)");
 });
 
 test("button width and visual properties come from configuration", () => {

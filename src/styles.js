@@ -98,6 +98,77 @@ export function createLogoStyles(props = {}) {
   };
 }
 
+export function createTypographyStyles(props = {}, options = {}) {
+  const alignment = value(props.align, "left");
+  const maxLines = Math.max(0, Number(value(props.cmsMaxLines, 0)) || 0);
+  const wrapMode = value(props.wrap, "wrap");
+  const whiteSpace = props.whiteSpace || (wrapMode === "nowrap" ? "nowrap" : wrapMode === "preserve" ? "pre" : "pre-wrap");
+  return {
+    ...(options.surface ? createSurfaceStyles(props) : {}),
+    color: props.color,
+    fontFamily: props.fontFamily,
+    fontSize: props.fontSize,
+    fontWeight: props.fontWeight,
+    fontStyle: props.fontStyle,
+    lineHeight: value(props.lineHeight, value(options.defaultLineHeight, "normal")),
+    letterSpacing: value(props.letterSpacing, 0),
+    textAlign: alignment,
+    textDecoration: value(props.textDecoration, "none"),
+    whiteSpace,
+    overflowWrap: value(props.overflowWrap, wrapMode === "nowrap" ? "normal" : "break-word"),
+    wordBreak: value(props.wordBreak, "normal"),
+    width: props.widthMode === "fixed" ? props.width : props.widthMode === "auto" ? "auto" : "100%",
+    maxWidth: value(props.maxWidth, options.defaultMaxWidth),
+    alignSelf: align(alignment),
+    marginLeft: alignment === "center" || alignment === "right" ? "auto" : 0,
+    marginRight: alignment === "center" ? "auto" : 0,
+    ...(maxLines ? { display: "-webkit-box", WebkitLineClamp: maxLines, WebkitBoxOrient: "vertical", overflow: "hidden" } : {}),
+  };
+}
+
+export function createImageStyles(props = {}) {
+  const imagePosition = value(props.position, "center center");
+  const horizontalPosition = value(props.align, String(imagePosition).split(" ")[0]);
+  const aspectRatio = props.aspectRatio && props.aspectRatio !== "auto" ? props.aspectRatio : undefined;
+  const fixedHeight = props.heightMode === "fixed";
+  const overlayBackground = props.overlayType === "gradient"
+    ? `linear-gradient(${value(props.overlayAngle, 180)}deg, ${value(props.overlayColor, "#102019")}, ${value(props.overlayGradientEnd, "#000000")})`
+    : value(props.overlayColor, "#102019");
+  return {
+    hoverOverlayEnabled: Boolean(props.hoverOverlayEnabled),
+    overlayEnabled: Boolean(props.overlayEnabled),
+    frame: {
+      "--loodit-image-hover-overlay": value(props.hoverOverlayColor, "#102019"),
+      "--loodit-image-hover-opacity": value(props.hoverOverlayOpacity, 40) / 100,
+      "--loodit-image-overlay-duration": `${value(props.overlayTransition, 240)}ms`,
+      "--wb-image-hover-overlay": value(props.hoverOverlayColor, "#102019"),
+      "--wb-image-hover-opacity": value(props.hoverOverlayOpacity, 40) / 100,
+      "--wb-image-overlay-duration": `${value(props.overlayTransition, 240)}ms`,
+      position: "relative",
+      display: "block",
+      overflow: "hidden",
+      width: props.widthMode === "fixed" ? props.width : props.widthMode === "auto" ? "auto" : "100%",
+      maxWidth: value(props.maxWidth, "100%"),
+      height: fixedHeight ? props.height : "auto",
+      aspectRatio,
+      marginLeft: horizontalPosition === "left" ? 0 : "auto",
+      marginRight: horizontalPosition === "right" ? 0 : "auto",
+      borderRadius: value(props.radius, 0),
+    },
+    image: {
+      display: "block",
+      width: "100%",
+      maxWidth: "100%",
+      height: fixedHeight || aspectRatio ? "100%" : "auto",
+      aspectRatio,
+      objectFit: value(props.fit, "cover"),
+      objectPosition: imagePosition,
+      opacity: value(props.opacity, 100) / 100,
+    },
+    overlay: { position: "absolute", inset: 0, pointerEvents: "none", background: overlayBackground, opacity: value(props.overlayOpacity, 25) / 100, mixBlendMode: value(props.overlayBlendMode, "normal") },
+  };
+}
+
 export function createButtonStyles(props = {}, options = {}) {
   const disabled = Boolean(props.disabled);
   const width = props.widthMode === "fill" ? "100%" : props.widthMode === "fixed" ? props.width : "auto";
