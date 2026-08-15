@@ -71,6 +71,13 @@ test("preserves configured layout modes for renderer-specific style generation",
   assert.equal(button.width, 180);
 });
 
+test("preserves valid CSS grid alignment values from the builder", () => {
+  assert.equal(createGridStyles({ align: "start" }).style.alignItems, "start");
+  assert.equal(createGridStyles({ align: "center" }).style.alignItems, "center");
+  assert.equal(createGridStyles({ align: "end" }).style.alignItems, "end");
+  assert.equal(createGridStyles({ align: "stretch" }).style.alignItems, "stretch");
+});
+
 test("creates one semantic style contract for every form-field part", () => {
   const result = createFormFieldStyles({ span: 2, height: 52, radius: 6, borderColor: "#123456", background: "#fafafa", color: "#111111" });
 
