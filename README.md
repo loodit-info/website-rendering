@@ -13,7 +13,7 @@ Both consumers currently install the same packed `0.1.0` artifact from their
 checked-in `vendor/` directories:
 
 ```json
-    "@loodit/website-rendering": "file:vendor/loodit-website-rendering-0.2.1.tgz"
+    "@loodit/website-rendering": "file:vendor/loodit-website-rendering-0.3.0.tgz"
 ```
 
 The tarballs have the same integrity checksum and keep each independently
@@ -37,8 +37,12 @@ different resolver versions.
 
 ```js
 import {
+  createButtonStyles,
   createFormFieldStyles,
+  createGridStyles,
   createLogoStyles,
+  createSectionStyles,
+  createStackStyles,
   normalizeSiteStyles,
   resolveNodeProps,
 } from "@loodit/website-rendering";
@@ -52,6 +56,10 @@ const props = resolveNodeProps({
 
 const formFieldStyles = createFormFieldStyles(props);
 const logoStyles = createLogoStyles(props);
+const buttonStyles = createButtonStyles(props);
+const sectionStyles = createSectionStyles(props);
+const stackStyles = createStackStyles(props);
+const gridStyles = createGridStyles(props);
 ```
 
 Semantic component-part styles are shared as plain style objects. Renderers
@@ -59,6 +67,11 @@ retain their framework-specific markup while consuming the same values for
 parts such as form labels, required markers, controls, and help text. Logo
 containers, links, images, and wordmarks use the same contract, including
 configured dimensions, positioning, alignment, spacing, and typography.
+
+Buttons and the section/stack/grid layout primitives also expose semantic
+style contracts. Width modes, fixed dimensions, spacing, alignment, column
+ratios, responsive column variables, wrapping, surfaces, and interaction
+colors are therefore resolved once instead of reimplemented by each renderer.
 
 The precedence contract is:
 

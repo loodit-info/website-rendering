@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { createFormFieldStyles, createLogoStyles, normalizeSiteStyles, resolveNodeProps } from "../src/index.js";
+import { createButtonStyles, createFormFieldStyles, createGridStyles, createLogoStyles, createSectionStyles, createStackStyles, normalizeSiteStyles, resolveNodeProps } from "../src/index.js";
 
 const styles = normalizeSiteStyles({
   colors: { primary: "#123456", text: "#202020" },
@@ -97,4 +97,28 @@ test("creates one semantic style contract for every logo part", () => {
   assert.equal(result.wordmark.lineHeight, 1.2);
   assert.equal(result.wordmark.letterSpacing, 1.5);
   assert.equal(result.image.width, 120);
+});
+
+test("button width and visual properties come from configuration", () => {
+  const result = createButtonStyles({ widthMode: "fixed", width: 184, align: "right", paddingX: 24, paddingY: 11, radius: 5, background: "#123456", hoverBackground: "#234567", fontSize: 15 });
+  assert.equal(result.wrapper.width, 184);
+  assert.equal(result.wrapper.alignSelf, "flex-end");
+  assert.equal(result.control.width, "100%");
+  assert.equal(result.control.padding, "11px 24px");
+  assert.equal(result.control.borderRadius, 5);
+  assert.equal(result.control["--site-button-hover-bg"], "#234567");
+  assert.equal(result.control.fontSize, 15);
+});
+
+test("section, stack, and grid layout styles come from configuration", () => {
+  const section = createSectionStyles({ paddingX: 32, paddingY: 48, minHeight: 500, overflow: "hidden", background: { type: "gradient", gradient: { angle: 90, start: "#000", end: "#fff" }, overlay: { enabled: true, color: "#111", opacity: 25 } } });
+  const stack = createStackStyles({ direction: "row", gap: 18, widthMode: "fixed", width: 640, align: "center", justify: "between" });
+  const grid = createGridStyles({ columns: 2, columnSizing: "custom", columnRatios: [1.2, .8], columnGap: 20, rowGap: 12 });
+  assert.equal(section.container.padding, "48px 32px");
+  assert.equal(section.background.background, "linear-gradient(90deg, #000, #fff)");
+  assert.equal(section.overlayEnabled, true);
+  assert.equal(stack.width, 640);
+  assert.equal(stack.justifyContent, "space-between");
+  assert.equal(grid.style.gridTemplateColumns, "minmax(0, 1.2fr) minmax(0, 0.8fr)");
+  assert.equal(grid.style.columnGap, 20);
 });
