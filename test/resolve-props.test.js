@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { createAccordionItemStyles, createAccordionStyles, createButtonStyles, createCardStyles, createFilterChipStyles, createFilterFieldStyles, createFilterStyles, createFooterStyles, createFormChoiceStyles, createFormFieldStyles, createFormMessageStyles, createFormStyles, createGalleryStyles, createGridStyles, createHeroStyles, createIconButtonStyles, createImageStyles, createLinkStyles, createLogoStyles, createMediaItemStyles, createNavbarStyles, createSectionStyles, createStackStyles, createTypographyStyles, normalizeSiteStyles, resolveNodeProps } from "../src/index.js";
+import { createAccordionItemStyles, createAccordionStyles, createButtonStyles, createCardStyles, createCarouselStyles, createCompositeSectionStyles, createFilterChipStyles, createFilterFieldStyles, createFilterStyles, createFooterStyles, createFormChoiceStyles, createFormFieldStyles, createFormMessageStyles, createFormStyles, createGalleryStyles, createGridStyles, createHeroStyles, createIconButtonStyles, createImageStyles, createLinkStyles, createLogoStyles, createMediaItemStyles, createNavbarStyles, createSectionStyles, createStackStyles, createTypographyStyles, normalizeSiteStyles, resolveNodeProps } from "../src/index.js";
 
 const styles = normalizeSiteStyles({
   colors: { primary: "#123456", text: "#202020" },
@@ -213,6 +213,25 @@ test("resolves accordion container, open state and icon placement", () => {
   assert.equal(item.iconName, "ChevronDown");
   assert.equal(item.iconOnLeft, true);
   assert.equal(item.icon.transform, "rotate(180deg)");
+});
+
+test("resolves carousel sizing, slides, transitions and controls", () => {
+  const result = createCarouselStyles({ template: "productShowcase", slidesPerView: 1, tabletSlides: 2, mobileSlides: 1, gap: 20, peek: 40, transition: "swipe", showArrows: true, arrowPosition: "centerEdges" }, { breakpoint: "desktop", itemCount: 6, index: 2 });
+  assert.equal(result.perView, 3);
+  assert.equal(result.maxIndex, 3);
+  assert.equal(result.sideArrows, true);
+  assert.match(result.track.transform, /-2/);
+  assert.equal(result.slide(0).display, "block");
+});
+
+test("resolves composite and not-found section shells responsively", () => {
+  const feature = createCompositeSectionStyles({ template: "minimalGrid", paddingX: 40, paddingY: 80, maxWidth: 1240 }, { type: "features", breakpoint: "mobile" });
+  const missing = createCompositeSectionStyles({ template: "dark", paddingX: 48, paddingY: 80, minHeight: 680, maxWidth: 1240 }, { type: "notFound", breakpoint: "mobile" });
+  assert.equal(feature.container.padding, "48px 20px");
+  assert.equal(feature.content.maxWidth, 1240);
+  assert.equal(missing.container.background, "#10231b");
+  assert.equal(missing.container.minHeight, 520);
+  assert.equal(missing.container.display, "flex");
 });
 
 test("button width and visual properties come from configuration", () => {

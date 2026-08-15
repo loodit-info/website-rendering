@@ -39,6 +39,8 @@ export function createMediaItemStyles(props?: PropertyMap): { hoverLift: boolean
 export function createFooterStyles(props?: PropertyMap, options?: PropertyMap): { template: unknown; container: StyleMap; content: StyleMap };
 export function createAccordionStyles(props?: PropertyMap, options?: PropertyMap): { template: unknown; container: StyleMap; content: StyleMap };
 export function createAccordionItemStyles(props?: PropertyMap, options?: PropertyMap): { open: boolean; iconName: unknown; iconOnLeft: boolean; item: StyleMap; trigger: StyleMap; question: StyleMap; icon: StyleMap; answer: StyleMap };
+export function createCarouselStyles(props?: PropertyMap, options?: PropertyMap): { template: unknown; transition: unknown; perView: number; maxIndex: number; fade: boolean; sideArrows: boolean; showArrows: boolean; showDots: boolean; container: StyleMap; viewport: StyleMap; track: StyleMap; slide(index: number): StyleMap; controls: StyleMap; edgeControls: StyleMap; arrow: StyleMap; dots: StyleMap; dot(active: boolean): StyleMap };
+export function createCompositeSectionStyles(props?: PropertyMap, options?: PropertyMap): { template: unknown; container: StyleMap; content: StyleMap };
 export function createFilterStyles(props?: PropertyMap, options?: PropertyMap): { template: unknown; container: StyleMap; content: StyleMap };
 export function createFilterFieldStyles(props?: PropertyMap): { container: StyleMap; label: StyleMap; control: StyleMap; input: StyleMap; trigger: StyleMap; value: StyleMap; placeholder: StyleMap; menu: StyleMap; option: StyleMap; selectedOption: StyleMap };
 export function createFilterChipStyles(props?: PropertyMap, options?: PropertyMap): { selected: boolean; control: StyleMap; count: StyleMap };

@@ -404,6 +404,72 @@ export function createAccordionItemStyles(props = {}, options = {}) {
   };
 }
 
+export function createCarouselStyles(props = {}, options = {}) {
+  const breakpoint = value(options.breakpoint, "desktop");
+  const template = value(props.template, "editorialFeature");
+  const railTemplate = template === "productShowcase" || template === "logoMarquee";
+  const suggestedDesktop = template === "productShowcase" ? 3 : template === "logoMarquee" ? 4 : 1;
+  const perView = Math.max(1, Number(breakpoint === "mobile" ? value(props.mobileSlides, 1) : breakpoint === "tablet" ? value(props.tabletSlides, railTemplate ? 2 : 1) : props.slidesPerView === 1 && railTemplate ? suggestedDesktop : value(props.slidesPerView, suggestedDesktop)) || 1);
+  const itemCount = Math.max(0, Number(value(options.itemCount, 0)) || 0);
+  const maxIndex = Math.max(0, itemCount - perView);
+  const index = Math.min(maxIndex, Math.max(0, Number(value(options.index, 0)) || 0));
+  const gap = value(props.gap, 22);
+  const peek = value(props.peek, 0);
+  const slideWidth = `calc((100% - ${(perView - 1) * gap}px - ${peek}px) / ${perView})`;
+  const transition = value(props.transition, "swipe");
+  const fade = transition === "fade" || transition === "scaleFade";
+  const fullWidth = props.widthMode === "full" || props.widthMode === "viewport";
+  const height = props.heightMode === "viewport" ? "100vh" : props.heightMode === "fixed" ? props.height : undefined;
+  const sideArrows = props.showArrows !== false && props.arrowPosition === "centerEdges";
+  const duration = `${value(props.transitionDuration, 520)}ms`;
+  return {
+    template, transition, perView, maxIndex, fade, sideArrows,
+    showArrows: props.showArrows !== false,
+    showDots: props.showDots !== false,
+    container: { ...createSurfaceStyles(props), "--loodit-carousel-arrow-inset": `${value(props.arrowInset, 28)}px`, boxSizing: "border-box", position: "relative", width: props.widthMode === "viewport" ? "100vw" : fullWidth ? "100%" : "calc(100% - 32px)", maxWidth: fullWidth ? "none" : props.maxWidth, minHeight: height, margin: fullWidth ? 0 : "24px auto", overflow: "hidden" },
+    viewport: { overflow: "hidden", minHeight: height, touchAction: "pan-y" },
+    track: { display: fade ? "block" : "flex", alignItems: "stretch", gap: fade ? 0 : gap, transform: fade ? "none" : `translateX(calc(-${index} * (${slideWidth} + ${gap}px)))`, transitionProperty: "transform, opacity", transitionDuration: duration, transitionTimingFunction: "cubic-bezier(.22,1,.36,1)", minHeight: height, willChange: "transform" },
+    slide: (slideIndex) => ({ display: fade ? slideIndex === index ? "block" : "none" : "block", position: fade ? slideIndex === index ? "relative" : "absolute" : "relative", inset: fade ? 0 : undefined, flex: fade ? undefined : `0 0 ${slideWidth}`, width: fade ? "100%" : undefined, minWidth: 0, opacity: fade ? slideIndex === index ? 1 : 0 : 1, transform: transition === "scaleFade" && slideIndex !== index ? "scale(1.035)" : undefined, transitionProperty: "opacity, transform", transitionDuration: duration }),
+    controls: { display: "flex", alignItems: "center", justifyContent: "space-between", gap: 20, marginTop: 18 },
+    edgeControls: { position: "absolute", zIndex: 20, left: value(props.arrowInset, 28), right: value(props.arrowInset, 28), top: "50%", display: "flex", justifyContent: "space-between", pointerEvents: "none", transform: "translateY(-50%)" },
+    arrow: { width: 44, height: 44, border: "1px solid #dbe3df", borderRadius: 999, background: "#ffffffde", color: "#17221d", display: "grid", placeItems: "center", cursor: "pointer", boxShadow: "0 8px 25px #17221d24" },
+    dots: { position: "static", left: "auto", bottom: "auto", transform: "none", display: "flex", alignItems: "center", gap: 8 },
+    dot: (active) => ({ width: active ? 24 : 7, height: 7, padding: 0, border: 0, borderRadius: 99, background: active ? value(props.activeDotColor, "#286b4c") : value(props.dotColor, "#bbc7c0"), cursor: "pointer", transition: "width .2s ease, background .2s ease" }),
+  };
+}
+
+export function createCompositeSectionStyles(props = {}, options = {}) {
+  const breakpoint = value(options.breakpoint, "desktop");
+  const type = value(options.type, "features");
+  const notFound = type === "notFound";
+  const defaultY = notFound ? 80 : type === "testimonials" ? 72 : 80;
+  const defaultX = notFound ? 48 : 40;
+  const mobileX = Math.min(value(props.paddingX, defaultX), notFound ? 22 : 20);
+  const tabletX = Math.min(value(props.paddingX, defaultX), notFound ? 34 : 30);
+  const mobileY = Math.min(value(props.paddingY, defaultY), notFound ? 54 : 48);
+  const paddingX = breakpoint === "mobile" ? mobileX : breakpoint === "tablet" ? tabletX : value(props.paddingX, defaultX);
+  const paddingY = breakpoint === "mobile" ? mobileY : value(props.paddingY, defaultY);
+  const configuredBackground = notFound && props.template === "dark" ? "#10231b" : props.background;
+  return {
+    template: value(props.template, notFound ? "minimal" : ""),
+    container: {
+      ...createBackgroundStyles(configuredBackground).background,
+      "--loodit-composite-tablet-x": `${tabletX}px`,
+      "--loodit-composite-mobile-x": `${mobileX}px`,
+      "--loodit-composite-mobile-y": `${mobileY}px`,
+      boxSizing: "border-box",
+      position: "relative",
+      width: "100%",
+      minHeight: notFound ? breakpoint === "mobile" ? 520 : props.minHeight : undefined,
+      padding: `${paddingY}px ${paddingX}px`,
+      display: notFound ? "flex" : undefined,
+      alignItems: notFound ? "center" : undefined,
+      justifyContent: notFound ? "center" : undefined,
+    },
+    content: { width: "100%", maxWidth: props.maxWidth, margin: "0 auto" },
+  };
+}
+
 export function createFilterStyles(props = {}, options = {}) {
   const mobile = options.breakpoint === "mobile";
   const filterShadow = props.shadow === "small" ? "0 5px 18px #17221d12" : props.shadow === "large" ? "0 24px 60px #17221d24" : props.shadow === "none" ? "none" : "0 14px 38px #17221d18";
