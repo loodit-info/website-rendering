@@ -35,6 +35,8 @@ export function createButtonStyles(props?: PropertyMap, options?: PropertyMap): 
 export function createSectionStyles(props?: PropertyMap): { container: StyleMap; background: StyleMap; overlay: StyleMap; overlayEnabled: boolean; content: StyleMap };
 export function createStackStyles(props?: PropertyMap, options?: PropertyMap): StyleMap;
 export function createGridStyles(props?: PropertyMap, options?: PropertyMap): { scrolling: boolean; reverse: boolean; style: StyleMap };
+export function createGalleryStyles(props?: PropertyMap, options?: PropertyMap): { template: unknown; container: StyleMap; grid: StyleMap; item(index: number): StyleMap };
+export function createNavbarStyles(props?: PropertyMap, options?: PropertyMap): { showScrolled: boolean; solidState: boolean; effectivePosition: unknown; style: StyleMap };
 export function createLogoStyles(props?: PropertyMap): {
   mode: unknown;
   container: StyleMap;

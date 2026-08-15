@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { createButtonStyles, createFormFieldStyles, createGridStyles, createLogoStyles, createSectionStyles, createStackStyles, normalizeSiteStyles, resolveNodeProps } from "../src/index.js";
+import { createButtonStyles, createFormFieldStyles, createGalleryStyles, createGridStyles, createLogoStyles, createNavbarStyles, createSectionStyles, createStackStyles, normalizeSiteStyles, resolveNodeProps } from "../src/index.js";
 
 const styles = normalizeSiteStyles({
   colors: { primary: "#123456", text: "#202020" },
@@ -127,4 +127,28 @@ test("section, stack, and grid layout styles come from configuration", () => {
   assert.equal(stack.justifyContent, "space-between");
   assert.equal(grid.style.gridTemplateColumns, "minmax(0, 1.2fr) minmax(0, 0.8fr)");
   assert.equal(grid.style.columnGap, 20);
+});
+
+test("collage gallery placement and responsive reset come from one contract", () => {
+  const props = { template: "collage", columns: 3, tabletColumns: 2, mobileColumns: 1, gap: 18, maxWidth: 1200 };
+  const desktop = createGalleryStyles(props, { breakpoint: "desktop" });
+  const mobile = createGalleryStyles(props, { breakpoint: "mobile" });
+  assert.equal(desktop.grid.gridTemplateColumns, "repeat(3, minmax(0, 1fr))");
+  assert.deepEqual(desktop.item(0), { gridColumn: "span 2", gridRow: "span 2" });
+  assert.deepEqual(desktop.item(1), { gridColumn: "auto", gridRow: "auto" });
+  assert.equal(mobile.grid.gridTemplateColumns, "repeat(1, minmax(0, 1fr))");
+  assert.deepEqual(mobile.item(0), { gridColumn: "auto", gridRow: "auto" });
+});
+
+test("transparent navbar overlays content and becomes solid after scrolling", () => {
+  const props = { transparentAtTop: true, position: "normal", background: "#ffffff", scrolledBackground: "#f8faf9", borderBottomWidth: 1, borderColor: "#dde5e0", scrolledShadow: "small" };
+  const top = createNavbarStyles(props, { scrolled: false });
+  const scrolled = createNavbarStyles(props, { scrolled: true });
+  assert.equal(top.effectivePosition, "fixed");
+  assert.equal(top.style.position, "fixed");
+  assert.equal(top.style.background, "transparent");
+  assert.equal(top.style.borderBottomWidth, 0);
+  assert.equal(scrolled.style.background, "#f8faf9");
+  assert.equal(scrolled.style.borderBottomWidth, 1);
+  assert.equal(scrolled.style.boxShadow, "0 3px 14px #17221d12");
 });

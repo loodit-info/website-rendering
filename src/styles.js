@@ -201,6 +201,65 @@ export function createGridStyles(props = {}, options = {}) {
   };
 }
 
+export function createGalleryStyles(props = {}, options = {}) {
+  const breakpoint = value(options.breakpoint, "desktop");
+  const columns = breakpoint === "mobile" ? value(props.mobileColumns, 1) : breakpoint === "tablet" ? value(props.tabletColumns, 2) : value(props.columns, 3);
+  const template = value(props.template, "grid");
+  const collageExpanded = template === "collage" && breakpoint !== "mobile" && Number(columns) > 1;
+  return {
+    template,
+    container: {
+      ...createSurfaceStyles(props),
+      width: "calc(100% - 32px)",
+      maxWidth: props.maxWidth,
+      margin: "24px auto",
+    },
+    grid: {
+      display: "grid",
+      gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
+      gap: props.gap,
+      alignItems: template === "masonry" || template === "editorial" ? "start" : undefined,
+      minWidth: 0,
+      "--gallery-columns": value(props.columns, 3),
+      "--gallery-tablet": value(props.tabletColumns, 2),
+      "--gallery-mobile": value(props.mobileColumns, 1),
+    },
+    item: (index) => index === 0 && collageExpanded ? { gridColumn: "span 2", gridRow: "span 2" } : { gridColumn: "auto", gridRow: "auto" },
+  };
+}
+
+export function createNavbarStyles(props = {}, options = {}) {
+  const transparentAtTop = props.transparentAtTop === true;
+  const scrolled = Boolean(options.scrolled);
+  const menuOpen = Boolean(options.menuOpen);
+  const editing = Boolean(options.editing);
+  const showScrolled = transparentAtTop && scrolled;
+  const solidState = showScrolled || menuOpen;
+  const backgroundValue = solidState ? value(props.scrolledBackground, props.background) : transparentAtTop ? "transparent" : props.background;
+  const shadowName = solidState ? value(props.scrolledShadow, props.shadow) : props.shadow;
+  const boxShadow = shadowName === "small" ? "0 3px 14px #17221d12" : shadowName === "medium" ? "0 8px 26px #17221d18" : shadowName === "large" ? "0 14px 38px #17221d24" : "none";
+  const configuredPosition = value(props.position, "normal");
+  const effectivePosition = transparentAtTop && !editing ? "fixed" : configuredPosition;
+  return {
+    showScrolled,
+    solidState,
+    effectivePosition,
+    style: {
+      ...createBackgroundStyles(backgroundValue).background,
+      color: props.color,
+      padding: `${value(props.paddingY, 14)}px ${value(options.paddingX, value(props.paddingX, 40))}px`,
+      borderBottomWidth: solidState || !transparentAtTop ? value(props.borderBottomWidth, 0) : 0,
+      borderBottomStyle: "solid",
+      borderBottomColor: value(props.borderColor, "transparent"),
+      boxShadow,
+      position: effectivePosition === "sticky" ? "sticky" : effectivePosition === "fixed" ? "fixed" : "relative",
+      insetInline: effectivePosition === "fixed" ? 0 : undefined,
+      top: effectivePosition === "normal" ? undefined : 0,
+      transition: `background-color ${value(props.transitionDuration, 240)}ms ease, box-shadow ${value(props.transitionDuration, 240)}ms ease, border-color ${value(props.transitionDuration, 240)}ms ease`,
+    },
+  };
+}
+
 export function createFormFieldStyles(props = {}) {
   const defaults = DEFAULT_COMPONENT_STYLES.formField;
   return {
