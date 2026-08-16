@@ -285,11 +285,16 @@ export function createIconStyles(props = {}) {
   const alignment = align(props.align);
   const width = padding > 0 ? size + padding * 2 : size;
   const height = width;
+  const fillMode = value(props.fillMode, "outline");
+  const isFilled = fillMode === "solid" || fillMode === "fill";
+  const fill = isFilled ? value(props.fillColor, props.color || "currentColor") : "none";
 
   return {
     size,
     strokeWidth,
     icon: value(props.icon, "Sparkles"),
+    fill,
+    fillMode: isFilled ? "solid" : "outline",
     container: {
       display: "flex",
       justifyContent: alignment,
@@ -648,7 +653,63 @@ export function createHeroStyles(props = {}, options = {}) {
 
 export function createStackStyles(props = {}, options = {}) {
   const direction = value(options.direction, value(props.direction, "column"));
-  const alignment = value(options.align, props.align);
+  const isRow = direction === "row";
+  const insideRow = Boolean(options.insideRowStack || options.parentDirection === "row");
+  const widthMode = props.widthMode || (insideRow ? "auto" : "fill");
+
+  let width;
+  let flex;
+
+  if (widthMode === "fixed") {
+    width = props.width || 300;
+    flex = "0 0 auto";
+  } else if (widthMode === "auto" || widthMode === "fit") {
+    width = options.forceFill ? "100%" : "fit-content";
+    flex = "0 0 auto";
+  } else {
+    if (insideRow) {
+      width = "auto";
+      flex = "1 1 0%";
+    } else {
+      width = "100%";
+      flex = undefined;
+    }
+  }
+
+  let alignItems;
+  let justifyContent;
+
+  if (isRow) {
+    const vert = props.alignItems || props.verticalAlign || options.rowAlignItems;
+    if (vert === "top" || vert === "start" || vert === "flex-start") alignItems = "flex-start";
+    else if (vert === "bottom" || vert === "end" || vert === "flex-end") alignItems = "flex-end";
+    else if (vert === "stretch") alignItems = "stretch";
+    else if (vert === "baseline") alignItems = "baseline";
+    else if (vert === "center") alignItems = "center";
+    else alignItems = "flex-start";
+
+    const horiz = props.justify || props.horizontalAlign;
+    if (horiz === "center") justifyContent = "center";
+    else if (horiz === "end" || horiz === "right" || horiz === "flex-end") justifyContent = "flex-end";
+    else if (horiz === "between" || horiz === "space-between") justifyContent = "space-between";
+    else if (horiz === "around" || horiz === "space-around") justifyContent = "space-around";
+    else justifyContent = "flex-start";
+  } else {
+    const horiz = props.align || props.horizontalAlign || "left";
+    if (horiz === "center") alignItems = "center";
+    else if (horiz === "right" || horiz === "end" || horiz === "flex-end") alignItems = "flex-end";
+    else if (horiz === "stretch") alignItems = "stretch";
+    else alignItems = "flex-start";
+
+    const vert = props.justify || props.verticalAlign;
+    if (vert === "center") justifyContent = "center";
+    else if (vert === "end" || vert === "bottom" || vert === "flex-end") justifyContent = "flex-end";
+    else if (vert === "between" || vert === "space-between") justifyContent = "space-between";
+    else justifyContent = "flex-start";
+  }
+
+  const stackAlign = props.align;
+
   return {
     ...createSurfaceStyles(props),
     position: "relative",
@@ -656,13 +717,15 @@ export function createStackStyles(props = {}, options = {}) {
     flexDirection: direction,
     flexWrap: value(options.flexWrap, "wrap"),
     gap: props.gap,
-    alignItems: direction === "row" ? value(options.rowAlignItems, "center") : align(alignment),
-    justifyContent: direction === "row" ? props.justify === "between" ? "space-between" : props.justify === "center" ? "center" : props.justify === "end" ? "flex-end" : align(alignment) : "flex-start",
+    alignItems,
+    justifyContent,
     maxWidth: options.suppressMaxWidth ? undefined : props.maxWidth,
     minHeight: props.minHeight || undefined,
-    width: props.widthMode === "auto" && !options.forceFill ? "fit-content" : props.widthMode === "fixed" ? props.width : "100%",
-    marginLeft: alignment === "center" || alignment === "right" ? "auto" : 0,
-    marginRight: alignment === "center" ? "auto" : alignment === "right" ? 0 : "auto",
+    width,
+    flex,
+    minWidth: 0,
+    marginLeft: !isRow && (stackAlign === "center" || stackAlign === "right") ? "auto" : 0,
+    marginRight: !isRow && stackAlign === "center" ? "auto" : !isRow && stackAlign === "right" ? 0 : "auto",
   };
 }
 

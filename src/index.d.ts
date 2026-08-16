@@ -33,7 +33,7 @@ export function createBackgroundStyles(value?: unknown): { background: StyleMap;
 export function createSurfaceStyles(props?: PropertyMap): StyleMap;
 export function createButtonStyles(props?: PropertyMap, options?: PropertyMap): { wrapper: StyleMap; control: StyleMap; icon: StyleMap };
 export function createLinkStyles(props?: PropertyMap, options?: PropertyMap): { active: boolean; preset: unknown; style: StyleMap };
-export function createIconStyles(props?: PropertyMap): { size: number; strokeWidth: number; icon: string; container: StyleMap; control: StyleMap };
+export function createIconStyles(props?: PropertyMap): { size: number; strokeWidth: number; icon: string; fill: string; fillMode: string; container: StyleMap; control: StyleMap };
 export function createIconButtonStyles(props?: PropertyMap): { showIcon: boolean; showText: boolean; iconOnRight: boolean; control: StyleMap; badge: StyleMap };
 export function createCardStyles(props?: PropertyMap): { hoverLift: boolean; container: StyleMap; content: StyleMap };
 export function createMediaItemStyles(props?: PropertyMap): { hoverLift: boolean; container: StyleMap };
