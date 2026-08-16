@@ -276,6 +276,43 @@ export function createLinkStyles(props = {}, options = {}) {
   };
 }
 
+export function createIconStyles(props = {}) {
+  const size = value(props.size, 32);
+  const strokeWidth = value(props.strokeWidth, 2);
+  const padding = value(props.padding, 0);
+  const radius = value(props.radius, 0);
+  const borderWidth = value(props.borderWidth, 0);
+  const alignment = align(props.align);
+  const width = padding > 0 ? size + padding * 2 : size;
+  const height = width;
+
+  return {
+    size,
+    strokeWidth,
+    icon: value(props.icon, "Sparkles"),
+    container: {
+      display: "flex",
+      justifyContent: alignment,
+      width: "100%",
+    },
+    control: {
+      display: "inline-flex",
+      alignItems: "center",
+      justifyContent: "center",
+      width: `${width}px`,
+      height: `${height}px`,
+      boxSizing: "border-box",
+      color: value(props.color, "#286b4c"),
+      background: value(props.background, "transparent"),
+      borderRadius: radius ? `${radius}px` : undefined,
+      borderWidth: borderWidth ? `${borderWidth}px` : undefined,
+      borderStyle: borderWidth ? "solid" : undefined,
+      borderColor: borderWidth ? value(props.borderColor, "#dfe5e1") : undefined,
+      textDecoration: "none",
+    },
+  };
+}
+
 export function createIconButtonStyles(props = {}) {
   const displayMode = value(props.displayMode, "icon");
   return {
