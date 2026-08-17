@@ -73,3 +73,10 @@ export function createFormFieldStyles(props?: PropertyMap, options?: PropertyMap
 };
 export function createFormChoiceStyles(props?: PropertyMap): { container: StyleMap; control: StyleMap; label: StyleMap };
 export function createFormMessageStyles(props?: PropertyMap, options?: PropertyMap): { container: StyleMap; success: StyleMap; error: StyleMap; loading: StyleMap; current: StyleMap };
+
+export function RenderIcon(props: { props?: PropertyMap; iconComponent?: unknown; className?: string; linkWrapper?: unknown }): unknown;
+export function RenderImage(props: { props?: PropertyMap; className?: string; frameClassName?: string }): unknown;
+export function RenderLogo(props: { props?: PropertyMap; imageElement?: unknown; wordmarkElement?: unknown; linkWrapper?: unknown; className?: string }): unknown;
+export function RenderSocial(props: { props?: PropertyMap; linkWrapper?: unknown; className?: string }): unknown;
+export function RenderSpacer(props: { props?: PropertyMap }): unknown;
+
