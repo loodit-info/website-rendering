@@ -276,7 +276,7 @@ export function createLinkStyles(props = {}, options = {}) {
   };
 }
 
-export function createIconStyles(props = {}) {
+export function createIconStyles(props = {}, options = {}) {
   const size = value(props.size, 32);
   const strokeWidth = value(props.strokeWidth, 2);
   const padding = value(props.padding, 0);
@@ -288,6 +288,7 @@ export function createIconStyles(props = {}) {
   const fillMode = value(props.fillMode, "outline");
   const isFilled = fillMode === "solid" || fillMode === "fill";
   const fill = isFilled ? value(props.fillColor, props.color || "currentColor") : "none";
+  const isFullWidth = props.widthMode === "fill" || props.widthMode === "full";
 
   return {
     size,
@@ -296,9 +297,11 @@ export function createIconStyles(props = {}) {
     fill,
     fillMode: isFilled ? "solid" : "outline",
     container: {
-      display: "flex",
-      justifyContent: alignment,
-      width: "100%",
+      display: isFullWidth ? "flex" : "inline-flex",
+      justifyContent: isFullWidth ? alignment : undefined,
+      width: isFullWidth ? "100%" : "auto",
+      maxWidth: isFullWidth ? "100%" : undefined,
+      verticalAlign: "middle",
     },
     control: {
       display: "inline-flex",
