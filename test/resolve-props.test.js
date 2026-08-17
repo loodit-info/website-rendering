@@ -16,7 +16,7 @@ test("normalizes partial site styles against shared defaults", () => {
 });
 
 test("applies theme values as defaults", () => {
-  const result = resolveNodeProps({ node: { type: "text", props: { text: "Hello", fontSize: 12 } }, siteStyles: styles });
+  const result = resolveNodeProps({ node: { type: "text", props: { text: "Hello" } }, siteStyles: styles });
   assert.equal(result.fontSize, 18);
   assert.equal(result.color, "#202020");
 });

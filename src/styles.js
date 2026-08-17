@@ -98,16 +98,33 @@ export function createLogoStyles(props = {}) {
   };
 }
 
+const HEADING_FONT_SIZES = {
+  1: 38,
+  2: 28,
+  3: 20,
+  4: 18,
+  5: 16,
+  6: 14,
+};
+
 export function createTypographyStyles(props = {}, options = {}) {
   const alignment = value(props.align, "left");
   const maxLines = Math.max(0, Number(value(props.cmsMaxLines, 0)) || 0);
   const wrapMode = value(props.wrap, "wrap");
   const whiteSpace = props.whiteSpace || (wrapMode === "nowrap" ? "nowrap" : wrapMode === "preserve" ? "pre" : "pre-wrap");
+  let resolvedFontSize = props.fontSize;
+  if (resolvedFontSize === undefined || resolvedFontSize === null || resolvedFontSize === "") {
+    if (options.defaultFontSize !== undefined) {
+      resolvedFontSize = options.defaultFontSize;
+    } else if (props.level) {
+      resolvedFontSize = HEADING_FONT_SIZES[props.level] || 28;
+    }
+  }
   return {
     ...(options.surface ? createSurfaceStyles(props) : {}),
     color: props.color,
     fontFamily: props.fontFamily,
-    fontSize: props.fontSize,
+    fontSize: resolvedFontSize,
     fontWeight: props.fontWeight,
     fontStyle: props.fontStyle,
     lineHeight: value(props.lineHeight, value(options.defaultLineHeight, "normal")),

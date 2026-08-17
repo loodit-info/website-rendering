@@ -74,9 +74,19 @@ export function createFormFieldStyles(props?: PropertyMap, options?: PropertyMap
 export function createFormChoiceStyles(props?: PropertyMap): { container: StyleMap; control: StyleMap; label: StyleMap };
 export function createFormMessageStyles(props?: PropertyMap, options?: PropertyMap): { container: StyleMap; success: StyleMap; error: StyleMap; loading: StyleMap; current: StyleMap };
 
-export function RenderIcon(props: { props?: PropertyMap; iconComponent?: unknown; className?: string; linkWrapper?: unknown }): unknown;
-export function RenderImage(props: { props?: PropertyMap; className?: string; frameClassName?: string }): unknown;
-export function RenderLogo(props: { props?: PropertyMap; imageElement?: unknown; wordmarkElement?: unknown; linkWrapper?: unknown; className?: string }): unknown;
-export function RenderSocial(props: { props?: PropertyMap; linkWrapper?: unknown; className?: string }): unknown;
-export function RenderSpacer(props: { props?: PropertyMap }): unknown;
+export function RenderIcon(props: { props?: PropertyMap; iconComponent?: unknown; className?: string; linkWrapper?: unknown }): any;
+export function RenderImage(props: { props?: PropertyMap; className?: string; frameClassName?: string }): any;
+export function RenderLogo(props: { props?: PropertyMap; imageElement?: unknown; wordmarkElement?: unknown; linkWrapper?: unknown; className?: string }): any;
+export function RenderSocial(props: { props?: PropertyMap; linkWrapper?: unknown; className?: string }): any;
+export function RenderSpacer(props: { props?: PropertyMap }): any;
+export function RenderButton(props: { props?: PropertyMap; options?: PropertyMap; textElement?: unknown; iconComponent?: unknown; linkWrapper?: unknown; className?: string; controlClassName?: string }): any;
+export function RenderIconButton(props: { props?: PropertyMap; iconComponent?: unknown; linkWrapper?: unknown; className?: string }): any;
+export function RenderCard(props: { props?: PropertyMap; children?: unknown; className?: string; contentClassName?: string }): any;
+export function RenderMediaItem(props: { props?: PropertyMap; children?: unknown; className?: string }): any;
+export function RenderInlineInput(props: { props?: PropertyMap; options?: PropertyMap; onSubmit?: (e: any) => void; className?: string }): any;
+export function RenderFilterChip(props: { props?: PropertyMap; options?: PropertyMap; iconComponent?: unknown; onClick?: (e: any) => void; className?: string }): any;
+export function RenderFormChoice(props: { props?: PropertyMap; disabled?: boolean; className?: string }): any;
+export function RenderFormMessage(props: { props?: PropertyMap; className?: string }): any;
+
+
 

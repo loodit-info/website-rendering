@@ -29,16 +29,17 @@ export function resolveNodeProps({ node, breakpoint = "desktop", siteStyles }) {
   if (!siteStyles || base.useSiteStyles === false) return local;
 
   const theme = themePropsForNode(node?.type, siteStyles);
-  const resolved = { ...base, ...theme, ...responsive };
+  const resolved = { ...theme, ...base, ...responsive };
   const localOverrides = new Set(Array.isArray(base.localStyleOverrides) ? base.localStyleOverrides : []);
 
   // Theme values act as defaults. Explicit inspector overrides, responsive
-  // values, and intentional zeroes remain authoritative.
+  // values, and configured values remain authoritative.
   for (const key of Object.keys(theme)) {
-    if (localOverrides.has(key) || responsive[key] !== undefined || base[key] === 0) {
+    if (localOverrides.has(key) || responsive[key] !== undefined || base[key] !== undefined) {
       resolved[key] = responsive[key] ?? base[key];
     }
   }
 
   return resolved;
 }
+
