@@ -276,7 +276,7 @@ export function createLinkStyles(props = {}, options = {}) {
   };
 }
 
-export function createIconStyles(props = {}) {
+export function createIconStyles(props = {}, options = {}) {
   const size = value(props.size, 32);
   const strokeWidth = value(props.strokeWidth, 2);
   const padding = value(props.padding, 0);
@@ -288,6 +288,7 @@ export function createIconStyles(props = {}) {
   const fillMode = value(props.fillMode, "outline");
   const isFilled = fillMode === "solid" || fillMode === "fill";
   const fill = isFilled ? value(props.fillColor, props.color || "currentColor") : "none";
+  const insideRow = Boolean(options.insideRow || options.parentDirection === "row");
 
   return {
     size,
@@ -296,9 +297,10 @@ export function createIconStyles(props = {}) {
     fill,
     fillMode: isFilled ? "solid" : "outline",
     container: {
-      display: "flex",
+      display: insideRow ? "inline-flex" : "flex",
       justifyContent: alignment,
-      width: "100%",
+      width: insideRow ? "auto" : "100%",
+      flexShrink: insideRow ? 0 : undefined,
     },
     control: {
       display: "inline-flex",
@@ -314,6 +316,7 @@ export function createIconStyles(props = {}) {
       borderStyle: borderWidth ? "solid" : undefined,
       borderColor: borderWidth ? value(props.borderColor, "#dfe5e1") : undefined,
       textDecoration: "none",
+      flexShrink: 0,
     },
   };
 }
@@ -613,10 +616,10 @@ export function createFilterChipStyles(props = {}, options = {}) {
   };
 }
 
-export function createSectionStyles(props = {}) {
+export function createSectionStyles(props = {}, options = {}) {
   const resolved = createBackgroundStyles(props.background);
   return {
-    container: { position: "relative", padding: `${value(props.paddingY, 0)}px ${value(props.paddingX, 0)}px`, textAlign: props.align, overflow: value(props.overflow, "visible") },
+    container: { position: "relative", padding: `${value(props.paddingY, 0)}px ${value(props.paddingX, 0)}px`, textAlign: props.align, overflow: value(props.overflow, "visible"), overflowX: "clip" },
     background: { position: "absolute", inset: 0, ...resolved.background },
     overlay: { position: "absolute", inset: 0, background: resolved.overlay.color, opacity: value(resolved.overlay.opacity, 40) / 100 },
     overlayEnabled: Boolean(resolved.overlay.enabled),

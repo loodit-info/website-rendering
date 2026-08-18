@@ -1,3 +1,5 @@
+import type { ReactNode, ComponentType, CSSProperties } from "react";
+
 export type WebsiteBreakpoint = "desktop" | "tablet" | "mobile";
 export type PropertyMap = Record<string, unknown>;
 export type StyleMap = Record<string, string | number | undefined>;
@@ -7,6 +9,7 @@ export interface WebsiteNode {
   type: string;
   props?: PropertyMap;
   styles?: Partial<Record<WebsiteBreakpoint, PropertyMap>>;
+  children?: WebsiteNode[];
 }
 
 export interface WebsiteSiteStyles {
@@ -73,3 +76,36 @@ export function createFormFieldStyles(props?: PropertyMap, options?: PropertyMap
 };
 export function createFormChoiceStyles(props?: PropertyMap): { container: StyleMap; control: StyleMap; label: StyleMap };
 export function createFormMessageStyles(props?: PropertyMap, options?: PropertyMap): { container: StyleMap; success: StyleMap; error: StyleMap; loading: StyleMap; current: StyleMap };
+
+export function getIcon(name?: unknown): ComponentType<{ size?: number; strokeWidth?: number; fill?: string; className?: string; style?: CSSProperties; "aria-hidden"?: boolean | "true" | "false" }> | null;
+export function cmsText(val: unknown, props?: PropertyMap): { text: string; html?: string };
+export function resolveHref(href?: unknown, site?: unknown): string;
+export function resolveNode(node: WebsiteNode, site?: unknown, record?: unknown, breakpoint?: WebsiteBreakpoint): PropertyMap;
+
+export function RenderIcon(props: { name?: unknown; size?: number; strokeWidth?: number; fill?: string; className?: string; style?: CSSProperties }): ReactNode;
+export function RenderButton(props: { props?: PropertyMap; options?: PropertyMap; iconComponent?: ComponentType<any>; linkWrapper?: ComponentType<any>; className?: string; controlClassName?: string; textElement?: ReactNode }): ReactNode;
+export function RenderIconButton(props: { props?: PropertyMap; iconComponent?: ComponentType<any>; linkWrapper?: ComponentType<any>; className?: string }): ReactNode;
+export function RenderImage(props: { props?: PropertyMap; className?: string }): ReactNode;
+export function RenderLogo(props: { props?: PropertyMap; linkWrapper?: ComponentType<any>; className?: string }): ReactNode;
+export function RenderSocial(props: { props?: PropertyMap; className?: string }): ReactNode;
+export function RenderSpacer(props: { props?: PropertyMap }): ReactNode;
+export function RenderCard(props: { props?: PropertyMap; children?: ReactNode; className?: string }): ReactNode;
+export function RenderMediaItem(props: { props?: PropertyMap; children?: ReactNode; className?: string }): ReactNode;
+export function RenderInlineInput(props: { props?: PropertyMap; options?: PropertyMap; onSubmit?: (e: any) => void; className?: string }): ReactNode;
+export function RenderFilterChip(props: { props?: PropertyMap; options?: PropertyMap; onClick?: () => void; className?: string }): ReactNode;
+export function RenderFormField(props: { props?: PropertyMap; className?: string }): ReactNode;
+export function RenderFormChoice(props: { props?: PropertyMap; disabled?: boolean; className?: string }): ReactNode;
+export function RenderFormMessage(props: { props?: PropertyMap; className?: string }): ReactNode;
+export function RenderAccordion(props: { props?: PropertyMap; options?: PropertyMap; children?: ReactNode; className?: string }): ReactNode;
+export function RenderAccordionItem(props: { id?: string; props?: PropertyMap; children?: ReactNode; className?: string }): ReactNode;
+export function RenderNavbar(props: { props?: PropertyMap; options?: PropertyMap; children?: ReactNode; logo?: ReactNode; trigger?: WebsiteNode; menuItems?: ReactNode[]; className?: string }): ReactNode;
+export function RenderNode(props: {
+  node: WebsiteNode;
+  site?: any;
+  parentType?: string;
+  record?: any;
+  options?: { breakpoint?: WebsiteBreakpoint; editing?: boolean; previewScrolled?: boolean };
+  renderWrapper?: (node: WebsiteNode, content: ReactNode) => ReactNode;
+  onNodeClick?: (node: WebsiteNode, event: any) => void;
+  editableTextRenderer?: (params: { as: string; style: StyleMap; text: string; html: string; node: WebsiteNode }) => ReactNode;
+}): ReactNode;
