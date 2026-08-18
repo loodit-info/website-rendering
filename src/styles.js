@@ -75,8 +75,10 @@ export const DEFAULT_COMPONENT_STYLES = Object.freeze({
   }),
 });
 
-export function createLogoStyles(props = {}) {
+export function createLogoStyles(props = {}, options = {}) {
   const defaults = DEFAULT_COMPONENT_STYLES.logo;
+  const mobile = options.breakpoint === "mobile" || options.breakpoint === "tablet" || options.compact;
+  const defaultFontSize = mobile ? 20 : Math.max(18, value(props.height, 40) * .62);
   const mode = props.displayMode === "iconText" ? "imageText" : props.displayMode === "icon" ? "image" : value(props.displayMode, "imageText");
   const position = value(props.imagePosition, value(props.iconPosition, "left"));
   const direction = position === "top" || position === "bottom" ? "column" : "row";
@@ -89,7 +91,7 @@ export function createLogoStyles(props = {}) {
       ...defaults.wordmark,
       color: props.color,
       fontFamily: value(props.fontFamily, defaults.wordmark.fontFamily),
-      fontSize: value(props.fontSize, Math.max(18, value(props.height, 40) * .62)),
+      fontSize: value(props.fontSize, defaultFontSize),
       fontWeight: value(props.fontWeight, defaults.wordmark.fontWeight),
       lineHeight: value(props.lineHeight, defaults.wordmark.lineHeight),
       letterSpacing: value(props.letterSpacing, defaults.wordmark.letterSpacing),
@@ -194,11 +196,12 @@ export function createImageStyles(props = {}) {
 
 export function createButtonStyles(props = {}, options = {}) {
   const disabled = Boolean(props.disabled);
-  const width = props.widthMode === "fill" || props.widthMode === "full" ? "100%" : props.widthMode === "fixed" ? props.width : "auto";
+  const insideNavbarOrActions = options.parentType === "navbar" || options.parentType === "navbarMobileActions" || options.insideNavbar;
+  const width = insideNavbarOrActions ? "auto" : props.widthMode === "fill" || props.widthMode === "full" ? "100%" : props.widthMode === "fixed" ? props.width : "auto";
   const background = disabled ? value(props.disabledBackground, "#cbd5cf") : value(props.background, "#286b4c");
   const color = disabled ? value(props.disabledColor, "#718078") : value(props.color, "#ffffff");
   return {
-    wrapper: { alignSelf: options.preserveParentCrossAxis ? undefined : align(props.align), width },
+    wrapper: { alignSelf: insideNavbarOrActions ? "center" : options.preserveParentCrossAxis ? undefined : align(props.align), width },
     control: {
       "--wb-button-hover-bg": value(props.hoverBackground, background),
       "--wb-button-hover-color": value(props.hoverColor, color),
@@ -212,7 +215,7 @@ export function createButtonStyles(props = {}, options = {}) {
       display: "inline-flex",
       alignItems: "center",
       justifyContent: "center",
-      width: "100%",
+      width: insideNavbarOrActions ? "auto" : "100%",
       gap: value(props.iconGap, 8),
       padding: `${value(props.paddingY, 13)}px ${value(props.paddingX, 21)}px`,
       background,
@@ -239,6 +242,8 @@ export function createButtonStyles(props = {}, options = {}) {
 }
 
 export function createLinkStyles(props = {}, options = {}) {
+  const insideMobileMenuLinks = options.parentType === "navbarMobileLinks" || options.parentType === "navbarMobileLinksChild" || options.insideMobileMenuLinks;
+  const insideMobileMenuActions = options.parentType === "navbarMobileActions" || options.parentType === "navbarMobileActionsChild" || options.insideMobileMenuActions;
   const active = Boolean(options.active);
   const preset = value(props.activePreset, "underline");
   const activeTreatment = active && preset !== "none";
@@ -246,30 +251,34 @@ export function createLinkStyles(props = {}, options = {}) {
   const activeColor = value(props.activeColor, props.color);
   const thickness = value(props.activeThickness, 2);
   const offset = value(props.activeOffset, 6);
+
+  const baseStyle = createTypographyStyles(props, { defaultMaxWidth: "100%" });
+
   return {
     active,
     preset,
     style: {
-      ...createTypographyStyles(props, { defaultMaxWidth: "100%" }),
+      ...baseStyle,
       "--loodit-link-hover-color": value(props.hoverColor, props.color),
       "--loodit-link-hover-opacity": value(props.hoverOpacity, 90) / 100,
       "--wb-link-hover": value(props.hoverColor, props.color),
-      display: "inline-flex",
+      display: insideMobileMenuLinks ? "flex" : "inline-flex",
       alignItems: "center",
-      width: props.widthMode === "fixed" ? props.width : props.widthMode === "fill" ? "100%" : "max-content",
-      maxWidth: value(props.maxWidth, "100%"),
-      alignSelf: options.preserveParentCrossAxis ? undefined : align(props.align),
+      width: insideMobileMenuLinks ? "100%" : props.widthMode === "fixed" ? props.width : props.widthMode === "fill" ? "100%" : "max-content",
+      maxWidth: insideMobileMenuLinks ? "100%" : value(props.maxWidth, "100%"),
+      alignSelf: insideMobileMenuActions ? "center" : options.preserveParentCrossAxis ? undefined : align(props.align),
       marginLeft: undefined,
       marginRight: undefined,
       color: activeTreatment ? activeColor : props.color,
-      fontWeight: activeTreatment ? value(props.activeFontWeight, props.fontWeight) : props.fontWeight,
+      fontWeight: insideMobileMenuLinks ? value(props.fontWeight, 600) : insideMobileMenuActions ? value(props.fontWeight, 600) : activeTreatment ? value(props.activeFontWeight, props.fontWeight) : props.fontWeight,
+      fontSize: insideMobileMenuLinks ? (typeof props.fontSize === "number" ? `${props.fontSize}px` : props.fontSize || "16px") : insideMobileMenuActions ? (typeof props.fontSize === "number" ? `${props.fontSize}px` : props.fontSize || "16px") : baseStyle.fontSize,
       background: activeFill ? value(props.activeFillColor, value(props.activeBackground, "#eaf4ee")) : undefined,
       borderRadius: activeFill ? value(props.activeRadius, preset === "pill" ? 999 : 8) : undefined,
-      padding: activeFill ? `${value(props.activePaddingY, 7)}px ${value(props.activePaddingX, 11)}px` : undefined,
-      textDecoration: activeTreatment && preset === "underline" ? "underline" : props.underline ? "underline" : "none",
+      padding: insideMobileMenuLinks ? "0" : insideMobileMenuActions ? "0" : activeFill ? `${value(props.activePaddingY, 7)}px ${value(props.activePaddingX, 11)}px` : undefined,
+      textDecoration: insideMobileMenuLinks || insideMobileMenuActions ? "none" : activeTreatment && preset === "underline" ? "underline" : props.underline ? "underline" : "none",
       textDecorationThickness: activeTreatment && preset === "underline" ? thickness : undefined,
       textUnderlineOffset: activeTreatment && preset === "underline" ? offset : undefined,
-      borderBottom: activeTreatment && preset === "border" ? `${thickness}px solid ${activeColor}` : undefined,
+      borderBottom: insideMobileMenuLinks || insideMobileMenuActions ? "none" : activeTreatment && preset === "border" ? `${thickness}px solid ${activeColor}` : undefined,
       paddingBottom: activeTreatment && preset === "border" && !activeFill ? offset : undefined,
       transition: `color ${value(props.transitionDuration, 160)}ms ease, opacity ${value(props.transitionDuration, 160)}ms ease, background-color ${value(props.transitionDuration, 160)}ms ease`,
     },
@@ -655,7 +664,17 @@ export function createHeroStyles(props = {}, options = {}) {
 }
 
 export function createStackStyles(props = {}, options = {}) {
-  const direction = value(options.direction, value(props.direction, "column"));
+  const insideNavbar = options.insideNavbar || options.parentType === "navbar";
+  const insideMobileMenuLinks = options.parentType === "navbarMobileLinks" || options.insideMobileMenuLinks;
+  const insideMobileMenuActions = options.parentType === "navbarMobileActions" || options.insideMobileMenuActions;
+
+  let direction = value(options.direction, value(props.direction, "column"));
+  if (insideMobileMenuLinks) {
+    direction = "column";
+  } else if (insideMobileMenuActions) {
+    direction = "row";
+  }
+
   const isRow = direction === "row";
   const insideRow = Boolean(options.insideRowStack || options.parentDirection === "row");
   const widthMode = props.widthMode || (insideRow ? "auto" : "fill");
@@ -663,7 +682,13 @@ export function createStackStyles(props = {}, options = {}) {
   let width;
   let flex;
 
-  if (widthMode === "fixed") {
+  if (insideNavbar) {
+    width = "auto";
+    flex = "0 0 auto";
+  } else if (insideMobileMenuLinks || insideMobileMenuActions) {
+    width = "100%";
+    flex = undefined;
+  } else if (widthMode === "fixed") {
     width = props.width || 300;
     flex = "0 0 auto";
   } else if (widthMode === "auto" || widthMode === "fit") {
@@ -682,7 +707,13 @@ export function createStackStyles(props = {}, options = {}) {
   let alignItems;
   let justifyContent;
 
-  if (isRow) {
+  if (insideMobileMenuLinks) {
+    alignItems = "flex-start";
+    justifyContent = "flex-start";
+  } else if (insideMobileMenuActions) {
+    alignItems = "center";
+    justifyContent = "flex-start";
+  } else if (isRow) {
     const vert = props.alignItems || props.verticalAlign || options.rowAlignItems;
     if (vert === "top" || vert === "start" || vert === "flex-start") alignItems = "flex-start";
     else if (vert === "bottom" || vert === "end" || vert === "flex-end") alignItems = "flex-end";
@@ -712,17 +743,18 @@ export function createStackStyles(props = {}, options = {}) {
   }
 
   const stackAlign = props.align;
+  const gap = insideMobileMenuLinks ? value(props.gap, 26) : insideMobileMenuActions ? value(props.gap, 16) : props.gap;
 
   return {
     ...createSurfaceStyles(props),
     position: "relative",
     display: "flex",
     flexDirection: direction,
-    flexWrap: value(options.flexWrap, "wrap"),
-    gap: props.gap,
+    flexWrap: insideNavbar || insideMobileMenuLinks || insideMobileMenuActions ? "nowrap" : value(options.flexWrap, "wrap"),
+    gap,
     alignItems,
     justifyContent,
-    maxWidth: options.suppressMaxWidth ? undefined : props.maxWidth,
+    maxWidth: insideNavbar || insideMobileMenuLinks || insideMobileMenuActions ? undefined : options.suppressMaxWidth ? undefined : props.maxWidth,
     minHeight: props.minHeight || undefined,
     width,
     flex,
@@ -802,7 +834,8 @@ export function createNavbarStyles(props = {}, options = {}) {
   const editing = Boolean(options.editing);
   const showScrolled = transparentAtTop && scrolled;
   const solidState = showScrolled || menuOpen;
-  const backgroundValue = solidState ? value(props.scrolledBackground, props.background) : transparentAtTop ? "transparent" : props.background;
+  const defaultBg = props.background && props.background !== "transparent" ? props.background : "#ffffff";
+  const backgroundValue = menuOpen ? value(props.menuBackground, defaultBg) : showScrolled ? value(props.scrolledBackground, props.background) : transparentAtTop ? "transparent" : props.background;
   const shadowName = solidState ? value(props.scrolledShadow, props.shadow) : props.shadow;
   const boxShadow = shadowName === "small" ? "0 3px 14px #17221d12" : shadowName === "medium" ? "0 8px 26px #17221d18" : shadowName === "large" ? "0 14px 38px #17221d24" : "none";
   const configuredPosition = value(props.position, "normal");

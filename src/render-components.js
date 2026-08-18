@@ -43,6 +43,7 @@ const desktopProps = (node) => ({ ...(node.props || {}), ...(node.styles?.deskto
 export function getIcon(name) {
   if (!name || name === "none") return null;
   const key = String(name).trim();
+  if (key.toLowerCase() === "close") return lucideIcons.X;
   const pascal = key.charAt(0).toUpperCase() + key.slice(1);
   return lucideIcons[pascal] || lucideIcons[key] || lucideIcons.ArrowRight;
 }
@@ -232,8 +233,8 @@ export function RenderImage({ props = {}, className = "" }) {
   );
 }
 
-export function RenderLogo({ props = {}, linkWrapper: LinkWrapper, className = "" }) {
-  const styles = createLogoStyles(props);
+export function RenderLogo({ props = {}, options = {}, linkWrapper: LinkWrapper, className = "" }) {
+  const styles = createLogoStyles(props, options);
   const content = [
     styles.mode !== "text" && props.src ? h("img", { key: "logo-img", src: string(props.src), alt: string(props.alt, "Logo"), style: styles.image }) : null,
     styles.mode !== "image" ? h("strong", { key: "logo-text", style: styles.wordmark }, string(props.text, "Your brand")) : null,
@@ -328,11 +329,11 @@ export function RenderFormField({ props = {}, className = "" }) {
   const control = props.fieldType === "textarea"
     ? h("textarea", { ...common, style: { ...styles.control, ...styles.textarea }, defaultValue: string(props.value), rows: 4 })
     : props.fieldType === "select"
-    ? h("select", { ...common, defaultValue: string(props.value) },
+      ? h("select", { ...common, defaultValue: string(props.value) },
         h("option", { value: "" }, string(props.placeholder)),
         string(props.options).split("\n").map((opt) => opt.trim()).filter(Boolean).map((opt) => h("option", { key: opt, value: opt }, opt))
       )
-    : h("input", { ...common, defaultValue: string(props.value), type: string(props.fieldType, "text") });
+      : h("input", { ...common, defaultValue: string(props.value), type: string(props.fieldType, "text") });
 
   return h(
     "label",
@@ -447,8 +448,9 @@ export function RenderNavbar({ props = {}, options = {}, children, logo, trigger
   const menuOpen = editing ? Boolean(props.mobileOpen) : open;
   const styles = createNavbarStyles(props, { scrolled: scrolled || (editing && props.previewScrolled), menuOpen, editing });
   const reveal = string(props.menuReveal, "dropdown");
-  const triggerText = string(trigger?.props?.text, "Menu");
-  const triggerIcon = menuOpen ? "Close" : trigger?.props?.icon || "Menu";
+  const triggerStyles = trigger ? createIconButtonStyles(trigger.props) : { showText: false, showIcon: true };
+  const triggerText = triggerStyles.showText && trigger?.props?.text ? string(trigger.props.text) : null;
+  const triggerIcon = menuOpen ? "X" : trigger?.props?.icon || "Menu";
 
   return h(
     "nav",
@@ -467,14 +469,14 @@ export function RenderNavbar({ props = {}, options = {}, children, logo, trigger
         h(
           "button",
           {
-            className: "site-navbar-trigger",
+            className: `site-navbar-trigger ${!triggerText ? "is-icon-only" : ""}`.trim(),
             type: "button",
             onClick: () => !editing && setOpen((v) => !v),
             "aria-expanded": menuOpen,
             "aria-label": menuOpen ? "Close menu" : "Open menu",
           },
-          h(RenderIcon, { name: triggerIcon, size: number(trigger?.props?.iconSize, 22) }),
-          h("span", null, triggerText)
+          triggerStyles.showIcon ? h(RenderIcon, { name: triggerIcon, size: number(trigger?.props?.iconSize, 22) }) : null,
+          triggerText ? h("span", null, triggerText) : null
         )
       )
     ),
@@ -483,25 +485,34 @@ export function RenderNavbar({ props = {}, options = {}, children, logo, trigger
       {
         className: "site-navbar-mobile",
         style: {
-          background: string(props.menuBackground, string(props.background, "#fff")),
+          background: string(props.menuBackground, string(props.background && props.background !== "transparent" ? props.background : "#fff", "#fff")),
           textAlign: string(props.menuLinkAlign, "left"),
-          padding: px(props.menuPadding),
         },
       },
-      menuItems
+      h(
+        "div",
+        {
+          className: "site-navbar-mobile-content",
+          style: {
+            maxWidth: px(props.maxWidth),
+            padding: props.menuPadding != null ? px(props.menuPadding) : undefined,
+          },
+        },
+        menuItems
+      )
     ),
     menuOpen && (reveal === "drawer" || reveal === "fullscreen")
       ? h("button", {
-          className: "site-navbar-backdrop",
-          type: "button",
-          "aria-label": "Close menu",
-          onClick: () => !editing && props.closeOnBackdrop !== false && setOpen(false),
-          style: {
-            background: string(props.menuBackdrop, "#17221d"),
-            opacity: number(props.menuBackdropOpacity, 38) / 100,
-            backdropFilter: `blur(${number(props.menuBackdropBlur, 2)}px)`,
-          },
-        })
+        className: "site-navbar-backdrop",
+        type: "button",
+        "aria-label": "Close menu",
+        onClick: () => !editing && props.closeOnBackdrop !== false && setOpen(false),
+        style: {
+          background: string(props.menuBackdrop, "#17221d"),
+          opacity: number(props.menuBackdropOpacity, 38) / 100,
+          backdropFilter: `blur(${number(props.menuBackdropBlur, 2)}px)`,
+        },
+      })
       : null
   );
 }
@@ -511,7 +522,17 @@ export function RenderNode({ node, site, parentType, record, options = {}, rende
   const breakpoint = options.breakpoint || "desktop";
   const p = resolveNode(node, site, record, breakpoint);
   const insideFooter = parentType === "footer";
-  const childParentType = insideFooter ? "footer" : node.type === "stack" && parentType === "navbar" ? "navbarStack" : node.type === "stack" && p.direction === "row" ? "rowStack" : node.type;
+  const childParentType = insideFooter
+    ? "footer"
+    : node.type === "stack" && parentType === "navbar"
+      ? "navbarStack"
+      : node.type === "stack" && parentType === "navbarMobileActions"
+        ? "navbarMobileActions"
+        : node.type === "stack" && parentType === "navbarMobileLinks"
+          ? "navbarMobileLinks"
+          : node.type === "stack" && p.direction === "row"
+            ? "rowStack"
+            : node.type;
 
   let children = node.children?.map((child) =>
     h(RenderNode, {
@@ -576,15 +597,26 @@ export function RenderNode({ node, site, parentType, record, options = {}, rende
       const desktopChildren = allChildren.filter((c) => c !== triggerNode).map((c) =>
         h(RenderNode, { key: c.id, node: c, site, parentType: "navbar", record, options, renderWrapper, onNodeClick, editableTextRenderer })
       );
-      const mobileMenuItems = menuNodes.map((c) =>
-        h(RenderNode, { key: c.id, node: c, site, parentType: "navbarMobile", record, options, renderWrapper, onNodeClick, editableTextRenderer })
+      const mobileMenuItems = menuNodes.map((c, idx) =>
+        h(RenderNode, {
+          key: c.id,
+          node: c,
+          site,
+          parentType: idx === 0 ? "navbarMobileLinks" : "navbarMobileActions",
+          record,
+          options,
+          renderWrapper,
+          onNodeClick,
+          editableTextRenderer,
+        })
       );
 
+      const triggerProps = triggerNode ? resolveNode(triggerNode, site, record, breakpoint) : null;
       content = h(RenderNavbar, {
         props: p,
         options,
         logo: renderedLogo,
-        trigger: triggerNode,
+        trigger: triggerNode ? { ...triggerNode, props: triggerProps } : null,
         menuItems: mobileMenuItems,
       }, desktopChildren);
       break;
@@ -663,7 +695,7 @@ export function RenderNode({ node, site, parentType, record, options = {}, rende
 
     case "link": {
       const active = string(p.href).startsWith("page:") && string(p.href).slice(5) === site?.page?.id;
-      const styles = createLinkStyles(p, { active, preserveParentCrossAxis: parentType === "navbarStack" });
+      const styles = createLinkStyles(p, { active, parentType, preserveParentCrossAxis: parentType === "navbarStack" || parentType === "navbarMobileActions" || parentType === "rowStack" });
       content = h(
         "a",
         {
@@ -701,7 +733,7 @@ export function RenderNode({ node, site, parentType, record, options = {}, rende
 
     case "button": {
       const resolvedPropsWithHref = { ...p, href: resolveHref(p.href, site) };
-      content = h(RenderButton, { props: resolvedPropsWithHref, options: { preserveParentCrossAxis: parentType === "rowStack" || parentType === "grid" } });
+      content = h(RenderButton, { props: resolvedPropsWithHref, options: { parentType, preserveParentCrossAxis: parentType === "rowStack" || parentType === "grid" || parentType === "navbarMobileActions" } });
       break;
     }
 
@@ -711,7 +743,7 @@ export function RenderNode({ node, site, parentType, record, options = {}, rende
 
     case "logo": {
       const resolvedPropsWithHref = { ...p, href: resolveHref(p.href || "/", site) };
-      content = h(RenderLogo, { props: resolvedPropsWithHref });
+      content = h(RenderLogo, { props: resolvedPropsWithHref, options: { breakpoint } });
       break;
     }
 

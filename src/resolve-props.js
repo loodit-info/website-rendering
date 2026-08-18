@@ -2,6 +2,9 @@ const BREAKPOINTS = new Set(["desktop", "tablet", "mobile"]);
 
 export function responsiveProps(node, breakpoint = "desktop") {
   const selectedBreakpoint = BREAKPOINTS.has(breakpoint) ? breakpoint : "desktop";
+  if (selectedBreakpoint === "mobile") {
+    return { ...(node?.styles?.tablet || {}), ...(node?.styles?.mobile || {}) };
+  }
   return node?.styles?.[selectedBreakpoint] || {};
 }
 
